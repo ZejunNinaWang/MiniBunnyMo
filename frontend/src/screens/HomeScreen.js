@@ -48,7 +48,7 @@ function HomeScreen(props){
                             </div>
                             <div className="product-gender">{product.gender}</div>
                             <div className="product-price">${product.price}</div>
-                            <div className="product-rating">{product.rating} Carrots ({product.numReviews})</div>
+                            <div className="product-rating">{product.rating} Carrots ({product.numReviews} Reviews)</div>
                         </div>
                     </li>
                     )

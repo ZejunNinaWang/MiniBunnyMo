@@ -288,7 +288,7 @@ a:hover{
   text-align: right;
 }
 
-/* from */
+/* form */
 .form{
   display: flex;
   justify-content: center;
@@ -319,3 +319,23 @@ input{
   border-radius: 0.5rem;
 }
 
+/*ProductScreen*/
+.content-margined{
+  padding: 1rem;
+}
+.product-header{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.product-list table{
+  width: 100%;
+}
+
+.product-list table th{
+  text-align: left;
+}
+
+.product-list tbody tr:nth-child(odd){
+  background-color: #f0f0f0;
+}

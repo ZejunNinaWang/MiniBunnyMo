@@ -10,13 +10,18 @@ function RegisterScreen(props){
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [rePassword, setRePassword] = useState('');
-    const userRegister = useSelector(state => state.userRegister);
+    const userRegister = useSelector(state => state.userSignin);
     const {loading, userInfo, error} = userRegister;
     const dispatch = useDispatch();
 
+    //if not exist, redirect to home page
+    //else, redirect to page indicated after "=", such as shipping, signin
+    const redirect = props.location.search? props.location.search.split("=")[1]:"/";
+
     useEffect(() => {
         if(userInfo){
-            props.history.push("/signin");
+            props.history.push(redirect);
+            //props.history.push('signin');
         }
         return () => {
 
@@ -55,7 +60,7 @@ function RegisterScreen(props){
                     </li>
                     <li>Already have an account?</li>
                     <li>
-                        <Link to="/signin" className="button secondary">Sign-in</Link>
+                        <Link to={redirect==="/"?"signin":"signin?redirect="+redirect} className="button secondary">Sign-in</Link>
                     </li>
                 </ul>
             </form>

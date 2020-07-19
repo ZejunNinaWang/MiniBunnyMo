@@ -18,8 +18,9 @@ function CartScreen(props) {
         }
     }, [])
 
-    const removeFromCartHandler = (productId) => {
-        dispatch(removeFromCart(productId));
+    const removeFromCartHandler = (pId) => {
+        console.log("id is ", pId);
+        dispatch(removeFromCart(pId));
     }
 
     const checkoutHandler = () => {
@@ -54,14 +55,11 @@ function CartScreen(props) {
                                     <div>
                                         Qty:
                                         <select value={item.qty} onChange={(e)=>dispatch(addToCart(item.product, e.target.value))}>
-                                            {/* <option value="1">1</option>
-                                            <option value="2">2</option>
-                                            <option value="3">3</option> */}
 
                                             {[...Array(item.countInStock).keys()].map( x => 
                                             <option key={x+1} value={x+1}> {x+1} </option>)}
                                         </select>
-                                        <button className="button" onClick={() => removeFromCartHandler(productId)} >
+                                        <button className="button" onClick={() => removeFromCartHandler(item.product)} >
                                             Delete
                                         </button>
                                     </div>

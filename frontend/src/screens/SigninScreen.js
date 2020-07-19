@@ -12,9 +12,14 @@ function SigninScreen(props){
     const {loading, userInfo, error} = userSignin;
     const dispatch = useDispatch();
 
+    //if not exist, redirect to home page
+    //else, redirect to page indicated after "=", such as shipping
+    const redirect = props.location.search? props.location.search.split("=")[1]:"/";
+
     useEffect(() => {
+        //after signin, redirect 
         if(userInfo){
-            props.history.push("/");
+            props.history.push(redirect);
         }
         return () => {
 
@@ -45,7 +50,7 @@ function SigninScreen(props){
                     </li>
                     <li>New to MiniBunnyMo?</li>
                     <li>
-                        <Link to="/register" className="button secondary">Create your MiniBunnyMo account</Link>
+                        <Link to={redirect==="/"?"register":"register?redirect="+redirect} className="button secondary">Create your MiniBunnyMo account</Link>
                     </li>
                 </ul>
             </form>
