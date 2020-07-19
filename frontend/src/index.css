@@ -188,7 +188,7 @@ a:hover{
 .details-action{
   flex: 1 1 30rem;
   /* margin-left: 1rem; */
-  border: 0.1rem #203040 solid;
+  border: 0.1rem #c0c0c0 solid;
   border-radius: 0.5rem;
   background-color: #f8f8f8;
   padding: 1rem;
@@ -246,9 +246,10 @@ a:hover{
 
 .cart-action{
   flex: 1 1 20rem;
-  background-color: #e5eaf0;
+  background-color: #f8f8f8;
   border-radius: 0.5rem;
   padding: 1rem;
+  border: 0.1rem #c0c0c0 solid;
 }
 
 .cart-list-container{
@@ -338,4 +339,78 @@ input{
 
 .product-list tbody tr:nth-child(odd){
   background-color: #f0f0f0;
+}
+
+/* Checkout Steps*/
+.checkout-steps{
+  display: flex;
+  /* align-items: center; */
+  justify-content: space-between;
+  width: 40rem;
+  margin: 1rem auto; /*make it in center horizontally*/
+}
+
+.checkout-steps div{
+  border-top: 0.3rem #c0c0c0 solid;
+  color: #c0c0c0; /*text color*/
+  flex: 1;   
+  padding-top: 1rem;
+  font-weight: bold;
+}
+
+.checkout-steps div a{
+  color:#c0c0c0; /*text color*/
+}
+
+.checkout-steps div a{
+  color:#c0c0c0; /*text color*/
+  color: rgb(209, 125, 139); /*text color*/
+}
+
+.checkout-steps div.active{
+  border-top: 0.3rem rgb(209, 125, 139) solid;
+  
+}
+
+/*Place Order*/
+.placeorder{
+  display: flex;
+  flex-wrap: wrap;
+  padding: 1rem;
+}
+
+.placeorder-info{
+  flex:3 1 60rem;
+}
+
+.placeorder-info > div {
+  border: 0.1rem #c0c0c0 solid;
+  border-radius: 0.5rem;
+  background-color: #f8f8f8;
+  padding: 1rem;
+  margin: 1rem;
+}
+
+.placeorder-action{
+  flex:1 1 20rem;
+  border: 0.1rem #c0c0c0 solid;
+  border-radius: 0.5rem;
+  background-color: #f8f8f8;
+  padding: 1rem;
+}
+
+.placeorder-action ul{
+  padding: 0;
+  list-style-type: none;
+}
+
+.placeorder-action > ul > li {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+}
+.placeorder-action > ul > li:last-child {
+  /* font-size: 2rem;
+  font-weight: bold; */
+  color: #c04000;
 }

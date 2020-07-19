@@ -1,6 +1,6 @@
 import Axios from "axios";
 import Cookie from "js-cookie";
-import { CART_ADD_ITEM, CART_REMOVE_ITEM } from "../constants/cartConstants";
+import { CART_ADD_ITEM, CART_REMOVE_ITEM, CART_SAVE_SHIPPING, CART_SAVE_PAYMENT } from "../constants/cartConstants";
 
 //getState is from thunk
 const addToCart = (productId, qty) => async (dispatch, getState) => {
@@ -36,4 +36,15 @@ const removeFromCart = (productId) => (dispatch, getState) => {
     Cookie.set("cartItems", JSON.stringify(cartItems));
 }
 
-export {addToCart, removeFromCart}
+const saveShipping = (shippingData) => (dispatch, getState) => {
+    dispatch({type: CART_SAVE_SHIPPING, payload: shippingData});
+    const {cart:{shipping}} = getState();
+    Cookie.set("shipping", JSON.stringify(shipping));
+}
+
+const savePayment = (paymentMethod) => (dispatch, getState) => {
+    dispatch({type: CART_SAVE_PAYMENT, payload: paymentMethod});
+    const {cart:{payment}} = getState();
+    Cookie.set("payment", JSON.stringify(payment));
+}
+export {addToCart, removeFromCart, saveShipping, savePayment}

@@ -19,7 +19,7 @@ function CartScreen(props) {
     }, [])
 
     const removeFromCartHandler = (pId) => {
-        console.log("id is ", pId);
+        // console.log("id is ", pId);
         dispatch(removeFromCart(pId));
     }
 
