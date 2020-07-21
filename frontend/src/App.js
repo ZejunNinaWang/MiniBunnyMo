@@ -13,11 +13,14 @@ import ProductsScreen from './screens/ProductsScreen';
 import ShippingScreen from './screens/ShippingScreen';
 import PaymentScreen from './screens/PaymentScreen';
 import PlaceOrderScreen from './screens/PlaceOrderScreen';
+import OrderScreen from './screens/OrderScreen';
+import ProfileScreen from './screens/ProfileScreen';
 
 
 function App() {
     const userSignin = useSelector(state=>state.userSignin);
     const {userInfo} = userSignin;
+    console.log("App: userInfo is ", userInfo);
 
   const openMenu = () =>{
     document.querySelector(".sidebar").classList.add("open");
@@ -39,7 +42,7 @@ function App() {
                   <div className="header-links">
                       {/* <a href="cart.html">Cart</a> */}
                       <Link to="/cart">Cart</Link>
-                      {userInfo ? (<Link to="/profile">{userInfo.name}</Link>) : (<Link to="/signin">Sign In</Link>)}
+                      {userInfo ? (<Link to="/profile">{userInfo.name}</Link>) : (<Link to="signin">Sign In</Link>)}
                   </div>
               </header>
               <aside className="sidebar">
@@ -59,6 +62,8 @@ function App() {
               <main className="main">
                   <div className="content">
                       {/* <Switch> */}
+                      <Route path="/profile" component={ProfileScreen} />
+                      <Route path="/order/:id" component={OrderScreen} />
                       <Route path="/placeorder" component={PlaceOrderScreen} />
                       <Route path="/payment" component={PaymentScreen} />
                       <Route path="/shipping" component={ShippingScreen} />

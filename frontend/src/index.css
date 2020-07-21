@@ -414,3 +414,17 @@ input{
   font-weight: bold; */
   color: #c04000;
 }
+
+/*Profile Screen*/
+.profile{
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.profile-info{
+  flex: 1 1 20rem;
+}
+
+.profile-orders{
+  flex: 3 1 60rem;
+}

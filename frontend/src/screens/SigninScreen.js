@@ -18,7 +18,7 @@ function SigninScreen(props){
 
     useEffect(() => {
         //after signin, redirect 
-        if(userInfo){
+        if(userInfo && userInfo._id){
             props.history.push(redirect);
         }
         return () => {

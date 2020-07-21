@@ -3,10 +3,11 @@ import { productListReducer, productDetailsReducer, productSaveReducer, productD
 import thunk from 'redux-thunk';
 import Cookie from "js-cookie";
 import { cartReducer } from "./reducers/cartReducers";
-import { userSigninReducer, /*userRegisterReducer*/ } from "./reducers/userReducers";
+import { userSigninReducer, userUpdateReducer, /*userRegisterReducer*/ } from "./reducers/userReducers";
+import { OrderCreateReducer, orderCreateReducer, orderDetailsReducer, myOrderListReducer } from "./reducers/orderReducers";
 
 const cartItems = Cookie.getJSON("cartItems") || [];
-const userInfo = Cookie.getJSON("userInfo") || null;
+const userInfo = Cookie.getJSON("userInfo") || {};
 const shipping = Cookie.getJSON("shipping") || {};
 const payment = Cookie.getJSON("payment") || {};
 
@@ -15,16 +16,20 @@ const initialState = {
         shipping: shipping,
         payment: payment
     }, 
-    userSignin: {userInfo}
+    userSignin: {userInfo: userInfo} //initial state for userSignin reducer
 };
 const reducer = combineReducers({
     productList: productListReducer,
     productDetails: productDetailsReducer,
     cart: cartReducer,
     userSignin: userSigninReducer,
+    userUpdate: userUpdateReducer,
     //userRegister: userRegisterReducer,
     productSave: productSaveReducer,
-    productDelete: productDeleteReducer
+    productDelete: productDeleteReducer,
+    orderCreate: orderCreateReducer,
+    orderDetails: orderDetailsReducer,
+    myOrderList: myOrderListReducer
 })
 
 const composeEnhancer = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
