@@ -3,15 +3,35 @@ import Product from '../models/productModel';
 import { getToken } from '../util';
 
 const productRoute = express.Router();
-productRoute.get("/", async (req, res) => {
-  try {
-      //get list of products
-      const products = await Product.find({});
-      res.send(products);
-  } catch (error) {
-    res.status(500).send({msg: error.message});
-  }
-})
+
+productRoute.get('/', async (req, res) => {
+  const category = req.query.category ? { category: req.query.category } : {};
+  const searchKeyword = req.query.searchKeyword
+    ? {
+        name: {
+          $regex: req.query.searchKeyword,
+          $options: 'i', //case insensitive
+        },
+      }
+    : {};
+  const sortOrder = req.query.sortOrder
+    ? req.query.sortOrder === 'lowest'
+      ? { price: 1 } //ascending
+      : { price: -1 } //descending
+    : { _id: -1 };
+  const products = await Product.find({ ...category, ...searchKeyword }).sort(sortOrder);
+  res.send(products);
+});
+
+// productRoute.get("/", async (req, res) => {
+//   try {
+//       //get list of products
+//       const products = await Product.find({});
+//       res.send(products);
+//   } catch (error) {
+//     res.status(500).send({msg: error.message});
+//   }
+// })
 productRoute.get('/:id', async (req, res) => {
   const product = await Product.findById(req.params.id);
   if (product) {

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import {BrowserRouter, Route, Link} from 'react-router-dom'
 import './App.css';
 
@@ -19,15 +19,25 @@ import OrdersScreen from './screens/OrdersScreen';
 
 
 function App() {
+    const sidebar = useRef();
     const userSignin = useSelector(state=>state.userSignin);
     const {userInfo} = userSignin;
     console.log("App: userInfo is ", userInfo);
 
   const openMenu = () =>{
     document.querySelector(".sidebar").classList.add("open");
+    document.addEventListener('click', handleClickOutside, true);
   }
   const closeMenu = () => {
     document.querySelector(".sidebar").classList.remove("open");
+    document.removeEventListener('click', handleClickOutside, true);
+  }
+
+  //hide sidebar if mouse click outside of sidebar
+  const handleClickOutside = (event) =>{
+    if (sidebar.current && !sidebar.current.contains(event.target)) {
+        closeMenu();
+    }
   }
   return (
     <BrowserRouter>
@@ -57,16 +67,16 @@ function App() {
                       )}
                   </div>
               </header>
-              <aside className="sidebar">
+              <aside className="sidebar" ref={sidebar}>
                   <div className="sidebar-content">
                       <h3>Categories</h3>
                       <button className="sidebar-close-button" onClick={closeMenu}>x</button>
-                      <u1>
+                      <u1 className="categories">
                           <li>
-                              <a href="index.html">Cashmere Lop</a>
+                              <Link to="/category/Cashmere Lop">Cashmere Lop</Link>
                           </li>
                           <li>
-                              <a href="index.html">American Fuzzy Lop</a>
+                              <Link to="/category/American Fuzzy Lop">American Fuzzy Lop</Link>
                           </li>
                       </u1>
                   </div>
@@ -87,6 +97,7 @@ function App() {
                       {/* ? means id is optional, path=/cart/ should also work */}
                       <Route path="/cart/:id?" component={CartScreen}/>
                       <Route path="/" exact={true} component={HomeScreen} />
+                      <Route path="/category/:id" component={HomeScreen} />
                       {/* </Switch> */}
 
                   </div>

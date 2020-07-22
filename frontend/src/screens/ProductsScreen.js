@@ -69,6 +69,7 @@ function ProductsScreen(props){
           }));
     }
 
+
     const deleteHandler = (productId) =>{
         dispatch(deleteProduct(productId));
     }
@@ -136,7 +137,7 @@ function ProductsScreen(props){
                         onChange={(e) => setCountInStock(e.target.value)}
                         ></input>
                     </li>
-                    <li>
+                    {/* <li>
                         <label htmlFor="name">Category</label>
                         <input
                         type="text"
@@ -145,6 +146,14 @@ function ProductsScreen(props){
                         id="category"
                         onChange={(e) => setCategory(e.target.value)}
                         ></input>
+                    </li> */}
+                    <li>
+                        <label htmlFor="name">Category</label>
+                        <select name="category" onChange={(e) => setCategory(e.target.value)}>
+                            <option value="">Choose a category</option>
+                            <option value="Cashmere Lop">Cashmere Lop</option>
+                            <option value="American Fuzzy Lop">American Fuzzy Lop</option>
+                        </select>
                     </li>
                     <li>
                         <label htmlFor="description">Description</label>

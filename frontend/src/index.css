@@ -142,6 +142,21 @@ a:hover{
 .sidebar-content{
   padding-left: 1rem;
 }
+.categories{
+  padding: 0;
+  list-style-type: none;
+}
+
+.categories a {
+  display: flex;
+  padding: 1rem;
+  color: #203040;
+}
+
+.categories a:hover {
+  background-color: #c0c0c0;
+  color: #203040;
+}
 
 .sidebar-close-button{
   border-radius: 50%;
@@ -314,11 +329,25 @@ a:hover{
   margin-top: 1rem;
 }
 
-input{
-  padding: 1rem;
+.form-container input,select{
+  /* padding: 1rem;
   border: 0.1rem #c0c0c0 solid;
+  border-radius: 0.5rem; */
+
+  padding: 1rem;
   border-radius: 0.5rem;
+  border: 0.1rem #c0c0c0 solid;
+  font-size: 1.6rem;
 }
+
+/* .form-container select{
+  padding: 1rem;
+  border-radius: 0.5rem;
+  border: 0.1rem #c0c0c0 solid;
+  font-size: 1.6rem;
+} */
+
+
 
 /*ProductScreen*/
 .content-margined{
@@ -462,4 +491,32 @@ input{
   margin: 0;
   margin-top: 0.4rem;
 }
+
+/*filter*/
+.category-title{
+  padding: 1rem;
+}
+
+.filter{
+  display: flex;
+  list-style-type: none;
+  justify-content: space-between;
+  align-items: center;
+  margin: 1rem auto;
+  /* margin-top: 1rem;
+  margin-bottom: 1rem;
+  margin-right: 1rem; */
+  max-width: 50rem;
+}
+
+
+.filter input,
+.filter button,
+.filter select {
+  padding: 1rem;
+  border-radius: 0.5rem;
+  border: 0.1rem #c0c0c0 solid;
+  font-size: 1.6rem;
+}
+
 
