@@ -15,6 +15,7 @@ import PaymentScreen from './screens/PaymentScreen';
 import PlaceOrderScreen from './screens/PlaceOrderScreen';
 import OrderScreen from './screens/OrderScreen';
 import ProfileScreen from './screens/ProfileScreen';
+import OrdersScreen from './screens/OrdersScreen';
 
 
 function App() {
@@ -42,7 +43,18 @@ function App() {
                   <div className="header-links">
                       {/* <a href="cart.html">Cart</a> */}
                       <Link to="/cart">Cart</Link>
-                      {userInfo ? (<Link to="/profile">{userInfo.name}</Link>) : (<Link to="signin">Sign In</Link>)}
+                      {userInfo ? (<Link to="/profile">{userInfo.name}</Link>) : (<Link to="/signin">Sign In</Link>)}
+                      {userInfo && userInfo.isAdmin && (
+                          <div className="dropdown">
+                            <a href="#" >Admin</a>
+                            <ul className="dropdown-content">
+                                <li>
+                                    <Link to="/products">Products</Link>
+                                    <Link to="/orders">Orders</Link>
+                                </li>
+                            </ul>
+                          </div>
+                      )}
                   </div>
               </header>
               <aside className="sidebar">
@@ -64,6 +76,7 @@ function App() {
                       {/* <Switch> */}
                       <Route path="/profile" component={ProfileScreen} />
                       <Route path="/order/:id" component={OrderScreen} />
+                      <Route path="/orders" component={OrdersScreen} />
                       <Route path="/placeorder" component={PlaceOrderScreen} />
                       <Route path="/payment" component={PaymentScreen} />
                       <Route path="/shipping" component={ShippingScreen} />

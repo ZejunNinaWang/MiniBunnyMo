@@ -1,8 +1,19 @@
 import express from 'express';
-import { isAuth } from '../util';
+import { isAuth, isAdmin } from '../util';
 import Order from '../models/orderModel';
 
 const orderRoute = express.Router();
+
+
+orderRoute.get("/", isAuth, async (req, res) => {
+  const orders = await Order.find().populate('user'); //to have access to user info, not just an id
+  res.send(orders);
+});
+
+orderRoute.get("/mine", isAuth, async (req, res) => {
+  const orders = await Order.find({user: req.user._id});
+  res.send(orders);
+});
 
 orderRoute.get("/:id", isAuth, async (req, res) => {
     const order = await Order.findOne({ _id: req.params.id });
@@ -13,6 +24,16 @@ orderRoute.get("/:id", isAuth, async (req, res) => {
     }
 });
 
+orderRoute.delete("/:id", isAuth, isAdmin, async (req, res) => {
+  console.log('in order delete');
+  const order = await Order.findOne({ _id: req.params.id });
+  if (order) {
+    const deletedOrder = await order.remove();
+    res.send(deletedOrder);
+  } else {
+    res.status(404).send("Order Not Found.")
+  }
+});
 
 //Only signined users can access this api to create order
 orderRoute.post("/", isAuth, async (req, res) => {

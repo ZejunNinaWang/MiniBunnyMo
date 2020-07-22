@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import CheckoutSteps from '../components/CheckoutSteps';
@@ -6,13 +6,19 @@ import { createOrder } from '../actions/orderActions';
 
 function PlaceOrderScreen(props) {
 
+  const [count, setCount] = useState(0);
+
+  console.log('Enterted PlaceOrderScreen');
+
   const cart = useSelector(state => state.cart);
   const orderCreate = useSelector(state => state.orderCreate);
+
   //const orderCreate = useSelector(state => state.orderCreate);
   //const { loading, success, error, order } = orderCreate;
 
   const { cartItems, shipping, payment } = cart;
   const {loading, order, error, success} = orderCreate;
+  console.log('success is ', success);
 //   console.log("cartItems has ", cartItems.length);
 //   console.log("shipping is ", shipping);
 //   console.log("payment is ", payment);
@@ -42,6 +48,7 @@ function PlaceOrderScreen(props) {
   const dispatch = useDispatch();
 
   const placeOrderHandler = () => {
+    console.log('in placeOrderHandler');
     // create an order
     dispatch(createOrder({
       orderItems: cartItems, shipping, payment, itemsPrice, shippingPrice,
@@ -49,10 +56,16 @@ function PlaceOrderScreen(props) {
     }));
   }
   useEffect(() => {
-      //if order created success, redirect to order detail page
-    if (success) {
-      props.history.push("/order/" + order._id);
-    }
+      //Ignore first render by using count
+      if(count){
+        //if order created success, redirect to order detail page
+        if (success) {
+          console.log("Order created successfully, ", order);
+          props.history.push("/order/" + order._id);
+        }
+      }
+      setCount(1);
+
 
   }, [success]);
 

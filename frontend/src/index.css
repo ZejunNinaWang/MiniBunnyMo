@@ -428,3 +428,38 @@ input{
 .profile-orders{
   flex: 3 1 60rem;
 }
+
+.order-list table{
+  width: 100%;
+}
+
+.order-list table th{
+  text-align: left;
+}
+
+.order-list tbody tr:nth-child(odd){
+  background-color: #f0f0f0;
+}
+
+/*Admin*/
+.dropdown{
+  display: inline-block;
+  position: relative;
+}
+
+.dropdown:hover .dropdown-content{
+  display: block;
+}
+
+.dropdown-content{
+  position: absolute;
+  display: none;
+  right: 0;
+  padding: 1rem;
+  list-style-type: none;
+  z-index: 1;
+  background-color: #203040;
+  margin: 0;
+  margin-top: 0.4rem;
+}
+

@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import {Link} from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { logout, update } from '../actions/userActions';
 import { listMyOrders } from '../actions/orderActions';
@@ -80,7 +81,36 @@ function ProfileScreen(props){
             </form>
            </div>
         </div>
-        <div className="profile-orders"></div>
+        <div className="profile-orders content-margined">
+        {
+            loadingOrders ? <div>Loading...</div> :
+            errorOrders ? <div>{errorOrders} </div> :
+            <div className="order-list">
+                <table >
+                <thead>
+                    <tr>
+                    <th>ID</th>
+                    <th>DATE</th>
+                    <th>TOTAL</th>
+                    <th>PAID</th>
+                    <th>ACTIONS</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {orders.map(order => <tr key={order._id}>
+                    <td>{order._id}</td>
+                    <td>{order.createdAt}</td>
+                    <td>{order.totalPrice}</td>
+                    <td>{order.isPaid ? 'Paid':'Not Paid'}</td>
+                    <td>
+                        <Link to={"/order/" + order._id}>DETAILS</Link>
+                    </td>
+                    </tr>)}
+                </tbody>
+                </table>
+                </div>
+        }
+        </div>
     </div>
 }
 
