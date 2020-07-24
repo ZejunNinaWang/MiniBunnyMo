@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import {useSelector, useDispatch} from 'react-redux';
 import { listProducts } from '../actions/productActions';
+import Rating from '../components/Rating';
 
 function HomeScreen(props){
     const category = props.match.params.id ? props.match.params.id : '';
@@ -32,7 +33,7 @@ function HomeScreen(props){
         dispatch(listProducts(category, searchKeyword, sortOrder));
       };
 
-      
+
     // const sortHandler = (e) => {
     //     console.log("In sortHandler: e.target.value is ",e.target.value );
     //     setSortOrder(e.target.value);
@@ -83,9 +84,13 @@ function HomeScreen(props){
                                     <div className="product-name">
                                         <Link to={'/product/' + product._id}>{product.name}</Link>
                                     </div>
-                                    <div className="product-gender">{product.gender}</div>
+                                    <div className="product-category">{product.category}</div>
                                     <div className="product-price">${product.price}</div>
-                                    <div className="product-rating">{product.rating} Carrots ({product.numReviews} Reviews)</div>
+                                    {/* <div className="product-rating">{product.rating} Carrots ({product.numReviews} Reviews)</div> */}
+                                    <div className="product-rating">
+                                        <Rating value={product.rating} text={product.numReviews + ' reviews'}/>
+                                    </div>
+                                    
                                 </div>
                             </li>
                             )

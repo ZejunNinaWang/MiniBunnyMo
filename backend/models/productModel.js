@@ -1,5 +1,15 @@
 import mongoose from 'mongoose';
 
+const reviewSchema = new mongoose.Schema(
+  {
+    name: { type: String, required: true },
+    rating: { type: Number, default: 0 },
+    comment: { type: String, required: true },
+  },
+  {
+    timestamps: true,
+  }
+);
 const productSchema = new mongoose.Schema({
     name: { type: String, required: true },
     image: { type: String, required: true },
@@ -10,6 +20,7 @@ const productSchema = new mongoose.Schema({
     description: { type: String, required: true },
     rating: { type: Number, default: 0, required: true },
     numReviews: { type: Number, default: 0, required: true },
+    reviews: [reviewSchema]
   });
 
 const Product = mongoose.model("Product", productSchema);

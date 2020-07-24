@@ -53,7 +53,7 @@ function App() {
                   <div className="header-links">
                       {/* <a href="cart.html">Cart</a> */}
                       <Link to="/cart">Cart</Link>
-                      {userInfo ? (<Link to="/profile">{userInfo.name}</Link>) : (<Link to="/signin">Sign In</Link>)}
+                      {userInfo && userInfo.name ? (<Link to="/profile">{userInfo.name}</Link>) : (<Link to="/signin">Sign In</Link>)}
                       {userInfo && userInfo.isAdmin && (
                           <div className="dropdown">
                             <a href="#" >Admin</a>

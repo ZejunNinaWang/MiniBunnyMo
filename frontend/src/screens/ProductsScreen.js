@@ -3,6 +3,8 @@ import { Link } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { signin } from '../actions/userActions';
 import { saveProduct, listProducts, deleteProduct } from '../actions/productActions';
+import axios from 'axios';
+
 
 
 function ProductsScreen(props){
@@ -17,6 +19,7 @@ function ProductsScreen(props){
     const [category, setCategory] = useState('');
     const [countInStock, setCountInStock] = useState('');
     const [description, setDescription] = useState('');
+    const [uploading, setUploading] = useState(false);
 
     const productList = useSelector(state=>state.productList);
     const {loading, products, error} = productList;
@@ -74,6 +77,26 @@ function ProductsScreen(props){
         dispatch(deleteProduct(productId));
     }
 
+    const uploadFileHandler = (e) => {
+        const file = e.target.files[0]; //access the single file
+
+        const bodyFormData = new FormData();
+        bodyFormData.append('image', file); //so we can send ajax request 
+        setUploading(true);
+        axios.post('/api/uploads', bodyFormData, {
+            headers: {
+                'Content-Type': 'multipart/form-data',
+            },
+        }).then(response => {
+            setImage(response.data);
+            setUploading(false);
+        }).catch(err => {
+            console.log(err);
+            setUploading(false);
+        });
+
+    }
+
     return(
         
     <div className="content content-margined">
@@ -114,8 +137,8 @@ function ProductsScreen(props){
                         id="image"
                         onChange={(e) => setImage(e.target.value)}
                         ></input>
-                        {/* <input type="file" onChange={uploadFileHandler}></input>
-                        {uploading && <div>Uploading...</div>} */}
+                        <input type="file" onChange={uploadFileHandler}></input>
+                        {uploading && <div>Uploading...</div>}
                     </li>
                     <li>
                         <label htmlFor="brand">Brand</label>
@@ -149,8 +172,10 @@ function ProductsScreen(props){
                     </li> */}
                     <li>
                         <label htmlFor="name">Category</label>
-                        <select name="category" onChange={(e) => setCategory(e.target.value)}>
-                            <option value="">Choose a category</option>
+                        <select name="category" 
+                            value={category}
+                            onChange={(e) => setCategory(e.target.value)}>
+                            {/* <option value="">Choose a category</option> */}
                             <option value="Cashmere Lop">Cashmere Lop</option>
                             <option value="American Fuzzy Lop">American Fuzzy Lop</option>
                         </select>

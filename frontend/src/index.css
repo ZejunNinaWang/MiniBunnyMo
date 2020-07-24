@@ -100,7 +100,7 @@ a:hover{
   font-size: 2rem;
   font-weight: bold;
 }
-.product-gender{
+.product-category{
   font-size: 1.2rem;
   color: darkgray;
 }
@@ -112,9 +112,64 @@ a:hover{
   margin-bottom: 1rem;
 }
 .product-image{
-  max-height: 34rem;
+  height: 34rem;
   max-width: 34rem;
 }
+
+/*Reviews*/
+ul.review{
+  list-style-type: none;
+  padding: 0;
+}
+
+.review li{
+  margin: 1rem;
+  margin-bottom: 2rem;
+}
+
+.review li>div {
+  margin: 0.5rem;
+}
+
+.review-item{
+  border-bottom: 0.1rem #c0c0c0 solid
+}
+
+.review-date {
+  font-size: 1.2rem;
+  color: #808080;
+}
+
+.review-name{
+  font-weight: bold;
+}
+
+/*Rating component*/
+.rating span{
+  color: pink;
+  font-size: 1.8rem;
+  margin: 0.1rem;
+}
+.rating span:last-child{
+  color: black;
+  font-size: 1.4rem;
+  margin-left: 0.5rem;
+}
+
+a > .rating > span:last-child{
+  color: #0000ff;
+}
+
+/* .half {
+
+}
+.fa-heart.half:before {
+    background: -webkit-linear-gradient(180deg,#ffffff 0%, #ffffff 50%,pink 50%);
+    -webkit-text-fill-color: transparent;
+    -webkit-background-clip: text;
+
+} */
+
 
 /*Sidebar*/
 .brand button{
@@ -198,6 +253,10 @@ a:hover{
   flex: 1 1 30rem;
   /* margin-left: 1rem; */
   padding: 1rem;
+}
+
+.details-description{
+  font-size: 1.4rem;
 }
 
 .details-action{

@@ -1,6 +1,6 @@
 import express from 'express';
 import Product from '../models/productModel';
-import { getToken } from '../util';
+import { getToken, isAuth } from '../util';
 
 const productRoute = express.Router();
 
@@ -111,6 +111,29 @@ productRoute.delete("/:id", async (req, res) => {
     res.status(500).send({msg: "Error in Deletion "+error.message});
   }
 })
+
+productRoute.post('/:id/reviews', isAuth, async (req, res) => {
+  console.log("route: rating is ", Number(req.body.rating));
+  console.log("route: rating is ", Number(req.body.rating));
+  const product = await Product.findById(req.params.id);
+  if (product) {
+    const review = {
+      name: req.body.name,
+      rating: Number(req.body.rating),
+      comment: req.body.comment,
+    };
+    product.reviews.push(review);
+    product.numReviews = product.reviews.length;
+    product.rating = product.reviews.reduce((a, c) => c.rating + a, 0) /product.reviews.length;
+    const updatedProduct = await product.save();
+    res.status(201).send({
+      data: updatedProduct.reviews[updatedProduct.reviews.length - 1],
+      message: 'Review saved successfully.',
+    });
+  } else {
+    res.status(404).send({ message: 'Product Not Found' });
+  }
+});
 
  
 export default productRoute;
