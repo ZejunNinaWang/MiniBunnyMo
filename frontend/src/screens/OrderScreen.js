@@ -72,7 +72,8 @@ function OrderScreen(props) {
                   order.orderItems.map(item =>
                     <li key={item._id}>
                       <div className="cart-image">
-                        <img src={item.image} alt="product" />
+                        {/* <img src={item.image} alt="product" /> */}
+                        <img  src={"../api/image/"+item.image} alt="product"/>
                       </div>
                       <div className="cart-name">
                         <div>

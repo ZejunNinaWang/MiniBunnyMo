@@ -5,6 +5,7 @@ import { getToken, isAuth } from '../util';
 const productRoute = express.Router();
 
 productRoute.get('/', async (req, res) => {
+
   const category = req.query.category ? { category: req.query.category } : {};
   const searchKeyword = req.query.searchKeyword
     ? {
@@ -20,18 +21,11 @@ productRoute.get('/', async (req, res) => {
       : { price: -1 } //descending
     : { _id: -1 };
   const products = await Product.find({ ...category, ...searchKeyword }).sort(sortOrder);
+ 
   res.send(products);
+
 });
 
-// productRoute.get("/", async (req, res) => {
-//   try {
-//       //get list of products
-//       const products = await Product.find({});
-//       res.send(products);
-//   } catch (error) {
-//     res.status(500).send({msg: error.message});
-//   }
-// })
 productRoute.get('/:id', async (req, res) => {
   const product = await Product.findById(req.params.id);
   if (product) {
@@ -42,6 +36,7 @@ productRoute.get('/:id', async (req, res) => {
 });
 
 productRoute.post("/", async (req, res) => {
+  console.log("in post product");
   try {
     const product = new Product({
       name: req.body.name,
@@ -51,12 +46,13 @@ productRoute.post("/", async (req, res) => {
       category: req.body.category,
       countInStock: req.body.countInStock,
       description: req.body.description,
-      rating: req.body.rating,
-      numReviews: req.body.numReviews,
+      // rating: req.body.rating,
+      // numReviews: req.body.numReviews,
     });
-    const updatedProduct = await product.save();
-    if(updatedProduct){
-      res.status(201).send({msg: "New Product Created", data: updatedProduct});
+
+    const newProduct = await product.save();
+    if(newProduct){
+      res.status(201).send({msg: "New Product Created", data: newProduct});
     }
     else
     {
@@ -113,8 +109,6 @@ productRoute.delete("/:id", async (req, res) => {
 })
 
 productRoute.post('/:id/reviews', isAuth, async (req, res) => {
-  console.log("route: rating is ", Number(req.body.rating));
-  console.log("route: rating is ", Number(req.body.rating));
   const product = await Product.findById(req.params.id);
   if (product) {
     const review = {

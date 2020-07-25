@@ -27,11 +27,12 @@ function ProductScreen(props){
 
     useEffect(() => {
         if(productReviewSaveSuccess){
-            alert('Review submitted successfully.');
+            //alert('Review submitted successfully.');
             setComment('');
             setRating(1);
 
             dispatch({type: PRODUCT_REVIEW_SAVE_RESET});
+            window.location.reload();
         }
 
         dispatch(detailsProducts(props.match.params.id));    
@@ -69,7 +70,7 @@ function ProductScreen(props){
                     <>
                     <div className="details">
                         <div className="details-image">
-                            <img src={product.image} alt="product"></img>
+                        <img  src={"../api/image/"+product.image} alt="product"/>
                         </div>
                         <div className="details-info">
                             <ul>

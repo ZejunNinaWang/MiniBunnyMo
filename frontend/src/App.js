@@ -78,6 +78,9 @@ function App() {
                           <li>
                               <Link to="/category/American Fuzzy Lop">American Fuzzy Lop</Link>
                           </li>
+                          <li>
+                              <Link to="/category/French Lop">French Lop</Link>
+                          </li>
                       </u1>
                   </div>
               </aside>

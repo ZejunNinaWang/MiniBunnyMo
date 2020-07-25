@@ -27,9 +27,10 @@ function ProfileScreen(props){
     }
 
     //update button handler
-    const submitHandler = (e) => {
+    const submitHandler = async (e) => {
         e.preventDefault();
-        dispatch(update({userId: userInfo._id, name, email, password}));
+        console.log("name is ", name);
+        await dispatch(update({userId: userInfo._id, name, email, password}));
         window.location.reload();
     }
 
@@ -39,6 +40,7 @@ function ProfileScreen(props){
             setEmail(userInfo.email);
             setName(userInfo.name);
             setPassword(userInfo.password);
+            
           }
 
         dispatch(listMyOrders());

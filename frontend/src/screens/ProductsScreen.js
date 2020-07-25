@@ -13,13 +13,15 @@ function ProductsScreen(props){
     //product info of currently created/updated product
     const [id, setId] = useState('');//undefined when creating product
     const [name, setName] = useState('');
-    const [price, setPrice] = useState('');
+    const [price, setPrice] = useState(0);
     const [image, setImage] = useState('');
     const [brand, setBrand] = useState('');
     const [category, setCategory] = useState('');
-    const [countInStock, setCountInStock] = useState('');
+    const [countInStock, setCountInStock] = useState(0);
     const [description, setDescription] = useState('');
     const [uploading, setUploading] = useState(false);
+    
+    const [inCompleteInfo, setInCompleteInfo] = useState(false);
 
     const productList = useSelector(state=>state.productList);
     const {loading, products, error} = productList;
@@ -60,16 +62,26 @@ function ProductsScreen(props){
 
     const submitHandler = (e) => {
         e.preventDefault();
-        dispatch(saveProduct({
-            _id: id,
-            name,
-            price,
-            image,
-            brand,
-            category,
-            countInStock,
-            description,
-          }));
+        if(!name || !image || !brand || !category || !description){
+            console.log("Incomplete product infomation");
+            setInCompleteInfo(true);
+
+        }
+        else{
+            setInCompleteInfo(false);
+            console.log("in submit: ", name)
+            dispatch(saveProduct({
+                _id: id,
+                name,
+                price,
+                image,
+                brand,
+                category,
+                countInStock,
+                description,
+              }));
+        }
+
     }
 
 
@@ -88,7 +100,8 @@ function ProductsScreen(props){
                 'Content-Type': 'multipart/form-data',
             },
         }).then(response => {
-            setImage(response.data);
+            console.log("upload success ", response.data.file.filename);
+            setImage(response.data.file.filename);
             setUploading(false);
         }).catch(err => {
             console.log(err);
@@ -113,7 +126,8 @@ function ProductsScreen(props){
                 <ul className="form-container">
                     <li><h2>Create Product</h2></li>
                     {loadingSave && <div>Loading</div>}
-                    {errorSave && <div>{errorSave}</div>}
+                    {errorSave && <div className="error">{errorSave}</div>}
+                    {inCompleteInfo && <div className="error">Please complete product infomation</div>}
                     <li>
                         <label htmlFor="name">Name</label>
                         <input type="text" name="name" value={name} id="name" onChange={(e) => setName(e.target.value)}></input>
@@ -130,13 +144,14 @@ function ProductsScreen(props){
                     </li>
                     <li>
                         <label htmlFor="image">Image</label>
-                        <input
+                        {/* <input
                         type="text"
                         name="image"
                         value={image}
                         id="image"
                         onChange={(e) => setImage(e.target.value)}
-                        ></input>
+                        ></input> */}
+                        {image != '' ? image:''}
                         <input type="file" onChange={uploadFileHandler}></input>
                         {uploading && <div>Uploading...</div>}
                     </li>
@@ -171,13 +186,14 @@ function ProductsScreen(props){
                         ></input>
                     </li> */}
                     <li>
-                        <label htmlFor="name">Category</label>
+                        <label htmlFor="category">Category</label>
                         <select name="category" 
                             value={category}
                             onChange={(e) => setCategory(e.target.value)}>
-                            {/* <option value="">Choose a category</option> */}
+                            <option value="">Choose a category</option>
                             <option value="Cashmere Lop">Cashmere Lop</option>
                             <option value="American Fuzzy Lop">American Fuzzy Lop</option>
+                            <option value="French Lop">French Lop</option>
                         </select>
                     </li>
                     <li>
@@ -190,7 +206,11 @@ function ProductsScreen(props){
                         ></textarea>
                     </li>
                     <li>
-                    <button type="submit" className="button">{id? "Edit" : "Create"}</button>
+                    <button 
+                    type="submit" 
+                    className="button"
+                    disabled={!name || !image || !brand || !category || !description}
+                    >{id? "Edit" : "Create"}</button>
                     </li>
                     <li>
                         <button
@@ -218,7 +238,7 @@ function ProductsScreen(props){
                     </tr>
                 </thead>
                 <tbody>
-                    {products.map(product => (
+                    {products && products.map(product => (
                         <tr>
                             <td>{product._id}</td>
                             <td>{product.name}</td>

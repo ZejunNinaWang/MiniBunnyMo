@@ -13,6 +13,10 @@ body{
   width: 100%;
 }
 
+.error{
+  color: red;
+}
+
 #root{
   height: 100%;
 }
@@ -356,6 +360,7 @@ a > .rating > span:last-child{
 }
 .cart-name{
   flex: 8 1;
+  padding-left: 1rem;
 }
 .cart-price{
   flex: 1 1;
