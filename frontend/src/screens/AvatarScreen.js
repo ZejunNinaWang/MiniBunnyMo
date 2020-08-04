@@ -35,8 +35,8 @@ function AvatarScreen(props) {
   const [modelsLoaded, setModelsLoaded] = useState(false); 
   const [isWebCamOn, setIsWebCamOn] = useState(false);
   const intervalRef = useRef();
-  const [ctx, setCtx] = useState();
-  const [photoTaken, setPhotoTaken] = useState(false);
+  const ctxRef = useRef();
+  const photoTakenRef = useRef();
   const [photoUrl, setPhotoUrl] = useState(null);
 
   const userRegister = useSelector(state => state.userSignin);
@@ -65,26 +65,35 @@ function AvatarScreen(props) {
   }
   
   useEffect(() => { 
-      let isMounted = true;  // note this flag denote mount status
-      //if not registered or signed in, redirect to register page
-      if(!userInfo || !userInfo.name){
-        props.history.push('register');
-      }
+
       if(userAvatarSaveSuccess){
         props.history.push("/");
       }
 
-      if(isMounted) loadModels();
+
+      
       
       return () => {
-        isMounted = false; // use effect cleanup to set flag false, if unmounted
         
       };
   }, [userAvatarSaveSuccess]);
 
   useEffect(() => { 
+    let isMounted = true;  // note this flag denote mount status
+    //if not registered or signed in, redirect to register page
+    if(!userInfo || !userInfo.name){
+      props.history.push('register');
+    }
+
+    if(isMounted) {
+      loadModels();
+      photoTakenRef.current = false;
+    }
     
     return () => {
+      console.log("setting isMounted to false")
+      isMounted = false; // use effect cleanup to set flag false, if unmounted
+
       console.log("unmount");
       //stop detecting face 
       videoRef.current.removeEventListener('play', detectFace);
@@ -98,7 +107,8 @@ function AvatarScreen(props) {
   
 
   const takePhoto = () => {
-    setPhotoTaken(true)
+    photoTakenRef.current = true;
+    console.log("A photoTaken is ", photoTakenRef.current)
 
     //stop detecting face 
     videoRef.current.removeEventListener('play', detectFace);
@@ -111,8 +121,9 @@ function AvatarScreen(props) {
     const w = videoRef.current.offsetWidth
     const h = parseInt(w/ratio,10)
     //create image from current video frame
-    //render the image on top of video component
-    ctx.fillRect(0,0,w,h);
+    const ctx = ctxRef.current;
+    ctx.clearRect(0, 0, ctx.width, ctx.height)
+    console.log("drawing video")
     ctx.drawImage(videoRef.current,0,0,w,h);
     
     //draw masks on the screenshot
@@ -126,11 +137,11 @@ function AvatarScreen(props) {
         const offsetLeft = videoLiRect.left - bodyRect.left
         const offsetTop = videoLiRect.top - bodyRect.top
 
-        const left = parseFloat(videoLi.childNodes[i].style.left.split('p')[0]) - offsetLeft;
-        const top = parseFloat(videoLi.childNodes[i].style.top.split('p')[0]) - offsetTop;
-        const rotation = parseFloat(videoLi.childNodes[i].style.transform.split("(")[1].split("d")[0]);
+        const left = parseFloat(image.style.left.split('p')[0]) - offsetLeft;
+        const top = parseFloat(image.style.top.split('p')[0]) - offsetTop;
+        const rotation = parseFloat(image.style.transform.split("(")[1].split("d")[0]);
         const rad = rotation * Math.PI/180
-        const width = videoLi.childNodes[i].offsetWidth
+        const width = image.offsetWidth
 
         let x = left + width/2
         let y = top + width/2.0
@@ -138,19 +149,17 @@ function AvatarScreen(props) {
         ctx.translate(x,y)
         ctx.rotate(rad)
         
-        ctx.drawImage(videoLi.childNodes[i], -1*width/2 ,-1*width/2 ,width ,width)
+        console.log("drawing mask")
+        ctx.drawImage(image, -1*width/2 ,-1*width/2 ,width ,width)
 
         ctx.rotate(-rad)
         ctx.translate(-x,-y)
 
-        videoLi.childNodes[i].remove()
+        image.remove()
       }
     }
     
-    //hide/stop video :
-    videoRef.current.srcObject.getTracks().forEach(function(track) {
-      track.stop();
-    });
+
 
     setTimeout(()=>{
       for(var i = 0; i < videoLi.childNodes.length; i++){
@@ -158,9 +167,15 @@ function AvatarScreen(props) {
           videoLi.childNodes[i].remove()
         }
       }
+      const canvas = document.getElementById("canvas")
+      canvas.getContext('2d').clearRect(0, 0, canvas.width, canvas.height)
     }, 200)
 
     savePhoto(photoCanvas);
+    //hide/stop video :
+    videoRef.current.srcObject.getTracks().forEach(function(track) {
+      track.stop();
+    });
 
   }
 
@@ -191,7 +206,7 @@ function AvatarScreen(props) {
       let w = videoRef.current.offsetWidth
       let h = parseInt(w/ratio,10)
   
-      let displaySize = { width: w, height: h }
+      let displaySize = { width: w, height: h };
       faceapi.matchDimensions(canvas, displaySize)
   
       //prepare to take photo
@@ -199,12 +214,11 @@ function AvatarScreen(props) {
       photoCanvas.setAttribute("id", "canvas-photo");
       videoLi.insertBefore(photoCanvas,videoLi.childNodes[0])
       faceapi.matchDimensions(photoCanvas, displaySize)
-      setCtx(photoCanvas.getContext('2d'));
+      ctxRef.current = photoCanvas.getContext('2d');
       
       //track face in video
       const intervalId = setInterval(async () => {
-        console.log("detecting");
-        if(videoRef && videoRef.current){
+        if(videoRef && videoRef.current && photoTakenRef.current !== true){
           const detection = await faceapi.detectSingleFace(videoRef.current, new faceapi.TinyFaceDetectorOptions()).withFaceLandmarks().withFaceExpressions()
           if(!detection) return
           canvas.getContext('2d').clearRect(0, 0, canvas.width, canvas.height)
@@ -217,44 +231,59 @@ function AvatarScreen(props) {
           }
     
           //draw mask 
-          const scale = videoRef.current.offsetWidth / videoRef.current.videoWidth
+          if(videoRef.current){
+            const scale = videoRef.current.offsetWidth / videoRef.current.videoWidth
             const overlayValues = getOverlayValues(detection.landmarks)
     
             const overlay = document.createElement("img")
             overlay.src = '/masks/1.PNG'
             overlay.alt = "mask overlay."
             const avatarUpload = document.getElementById("avatar-upload")
-            const left = videoLi.offsetLeft + overlayValues.leftOffset * scale
-            const top = videoLi.offsetTop + overlayValues.topOffset * scale
+            const Left = videoLi.offsetLeft + overlayValues.leftOffset * scale
+            const Top = videoLi.offsetTop + overlayValues.topOffset * scale
             overlay.style.cssText = `
               position: absolute;
-              left: ${left}px;
-              top: ${top}px;
+              left: ${Left}px;
+              top: ${Top}px;
               width: ${overlayValues.width * scale}px;
               transform: rotate(${overlayValues.angle}deg);
+              visibility: hidden;
             `
-            videoLi.insertBefore(overlay, videoLi.childNodes[0]);
+              videoLi.insertBefore(overlay, videoLi.childNodes[0]);
+              const bodyRect = document.body.getBoundingClientRect()
+              const videoLiRect = videoLi.getBoundingClientRect()
+              const offsetLeft = videoLiRect.left - bodyRect.left
+              const offsetTop = videoLiRect.top - bodyRect.top
+  
+              const left = parseFloat(overlay.style.left.split('p')[0]) - offsetLeft;
+              const top = parseFloat(overlay.style.top.split('p')[0]) - offsetTop;
+              const rotation = parseFloat(overlay.style.transform.split("(")[1].split("d")[0]);
+              const rad = rotation * Math.PI/180
+              const width = overlay.offsetWidth
+  
+              let x = left + width/2
+              let y = top + width/2.0
+  
+              const ctx = canvas.getContext('2d');
+  
+              ctx.translate(x,y)
+              ctx.rotate(rad)
+              ctx.drawImage(overlay, -1*width/2 ,-1*width/2 ,width ,width)
+  
+              ctx.rotate(-rad)
+              ctx.translate(-x,-y)
+          }
+          
+
         }
         
       }, 100)
       intervalRef.current = intervalId;
-      console.log("intervalId is ", intervalId)
-      console.log("faceDetectIntervalId is ", intervalRef.current)
     }
     
   }
 
-
-  //Allows to download and set as profile
   const savePhoto = (canvas) => {
-    //Pop up download window 
-    // let downloadLink = document.createElement('a');
-    // downloadLink.setAttribute('download', 'CanvasAsImage.png');
-    // let dataURL = canvas.toDataURL('image/png');
-    // let url = dataURL.replace(/^data:image\/png/,'data:application/octet-stream');
-    // downloadLink.setAttribute('href', url);
-    // downloadLink.click();
-
     let dataURL = canvas.toDataURL('image/png');
     setPhotoUrl(dataURL)
   }
@@ -267,7 +296,7 @@ function AvatarScreen(props) {
     canvas.remove();
     photoCanvas.remove();
     startVideo()
-    setPhotoTaken(false)
+    photoTakenRef.current = false;
 
 
   }
@@ -305,38 +334,35 @@ function AvatarScreen(props) {
         </li>
         <li className="button-selfie-li">
         <button 
-          style={{display: !photoTaken? '':'none'}}
+          style={{display: !photoTakenRef.current? '':'none'}}
           disabled={!modelsLoaded} 
           onClick={isWebCamOn?takePhoto:startVideo} 
           className="button selfie"
           ref={btnTakePhotoRef}>
           {isWebCamOn?"Take Photo":"Turn on Camera"}
         </button>
-        <button
-         style={{display: photoTaken? '':'none'}}
-         className="button"
-         onClick={retake}>
-           Retake
-        </button>
-        <button
-         style={{display: photoTaken? '':'none'}}
-         className="button"
-         onClick={setAsProfile}>
-           Set As Profile
-        </button>
+        <div style={{display: photoTakenRef.current? '':'none'}}>
+          <button
+          className="button"
+          onClick={retake}>
+            Retake
+          </button>
+          <button
+          className="button"
+          onClick={setAsProfile}>
+            Set As Profile
+          </button>
+        </div>
+        
 
 
         </li>
         
       </ul>
 
-      <div className="avatar-generated">
-        <div className="avatar-image">
-          {/* <img  src={"../api/image/"+product.image} /> */}
-        </div>
-      </div>
       
     </div>
-  );
+  )
+  
 }
 export default AvatarScreen;

@@ -518,6 +518,15 @@ a > .rating > span:last-child{
   flex: 1 1 20rem;
 }
 
+.profile-info button:focus{
+  outline:none;
+  box-shadow: none;
+}
+
+.profile-info button:active {
+  background-color: rgb(209, 125, 139);
+}
+
 .profile-orders{
   flex: 3 1 60rem;
 }
@@ -613,7 +622,8 @@ canvas {
 
 .avatar-upload li{
   list-style-type: none;
-  /* width: 100%; */
+ 
+  text-align: center;
   
 }
 
@@ -621,22 +631,23 @@ canvas {
   /* width: 34rem; 100% to be responsive? */
   width: 39.5rem;
   height: auto;
+  /* object-fit: cover; */
 }
 
 .button-selfie-li{
   display: flex;
-  /* align-items: center; */
-  justify-content: space-between;
-  margin: 0 auto;
 }
-.button-selfie-li button{
+.button-selfie-li div{
+  margin: 0 auto;
+  width: 39.5rem;
+  display: flex;
+}
+.button-selfie-li div .button{
   flex: 0.5;
 }
-
 .button.selfie{
-  /* text-align: center; */
-  flex: 0.5;
   margin: 0 auto;
+  width: 39.5rem;
 }
 
 .button.selfie:focus {

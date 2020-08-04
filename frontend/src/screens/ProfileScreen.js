@@ -10,11 +10,10 @@ function ProfileScreen(props){
     const [email, setEmail] = useState('');
 
     const userUpdate = useSelector(state => state.userUpdate);
-    const {loading, success, error} = userUpdate;
+    const {loading, success: userUpdateSuccess , error} = userUpdate;
 
     const userSignin = useSelector(state => state.userSignin);
     const {userInfo} = userSignin;
-    console.log("ProfileScreen: userInfo is ", userInfo);
 
     const myOrderList = useSelector(state => state.myOrderList);
     const {loading: loadingOrders, orders, error: errorOrders} = myOrderList;
@@ -27,16 +26,15 @@ function ProfileScreen(props){
     }
 
     //update button handler
-    const submitHandler = async (e) => {
+    const submitHandler = (e) => {
         e.preventDefault();
         console.log("name is ", name);
-        await dispatch(update({userId: userInfo._id, name, email, password}));
-        window.location.reload();
+        dispatch(update({userId: userInfo._id, name, email, password}));
+        // window.location.reload();
     }
 
     useEffect(() => { 
         if (userInfo) {
-            //console.log(userInfo.name)
             setEmail(userInfo.email);
             setName(userInfo.name);
             setPassword(userInfo.password);
@@ -47,7 +45,7 @@ function ProfileScreen(props){
         return () => {
 
         };
-    }, [userInfo]);
+    }, [userSignin]);
 
     return <div className="profile">
         <div className="profile-info">
@@ -56,9 +54,9 @@ function ProfileScreen(props){
                 <ul className="form-container">
                     <li><h2>User Profile</h2></li>
                     {loading && <div>Loading</div>}
-                    {error && <div>{error}</div>}
+                    {error && <div style={{color: "green"}}>{error}</div>}
                     {/*TODO: fix issue: the following text should disappear after switch screen,for now it only disappear when refresh page */}
-                    {success && <div style={{color: "green"}}>Profile Saved Successfully.</div>}
+                    {userUpdateSuccess && <div style={{color: "green"}}>Profile Saved Successfully.</div>}
                     <li>
                         <label htmlFor="name">Name</label>
                         <input type="name" name="name" id="name" value={name} onChange={(e) => setName(e.target.value)}></input>

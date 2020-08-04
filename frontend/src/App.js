@@ -7,7 +7,6 @@ import ProductScreen from './screens/ProductScreen';
 import CartScreen from './screens/CartScreen';
 import SigninScreen from './screens/SigninScreen';
 import { useSelector } from 'react-redux';
-import { userSigninReducer } from './reducers/userReducers';
 import RegisterScreen from './screens/RegisterScreen';
 import ProductsScreen from './screens/ProductsScreen';
 import ShippingScreen from './screens/ShippingScreen';
@@ -23,7 +22,6 @@ function App() {
     const sidebar = useRef();
     const userSignin = useSelector(state=>state.userSignin);
     const {userInfo} = userSignin;
-    console.log("App: userInfo is ", userInfo);
 
   const openMenu = () =>{
     document.querySelector(".sidebar").classList.add("open");
@@ -42,7 +40,7 @@ function App() {
   }
 
   useEffect(() => { 
-    console.log("userInfo is ", userInfo)
+
     return () => {
 
     };

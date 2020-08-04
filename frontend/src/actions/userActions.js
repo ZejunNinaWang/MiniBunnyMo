@@ -27,6 +27,7 @@ const update = ({userId, name, email, password}) => async (dispatch, getState) =
         }
         );
         dispatch({type: USER_UPDATE_SUCCESS, payload: data});
+        dispatch({type: USER_SIGNIN_SUCCESS, payload: data});
         Cookie.set('userInfo', JSON.stringify(data));
     } catch (error) {
         dispatch({type: USER_UPDATE_FAIL, payload: error.message});
@@ -66,7 +67,7 @@ const saveAvatar = (fileName) => async (dispatch, getState) => {
             dispatch({type: USER_AVATAR_SAVE_SUCCESS, payload: data});
             //Need to update userinfo as well
             dispatch({type: USER_UPDATE_SUCCESS, payload: data});
-            console.log("saveAvatar return data is ", data);
+            dispatch({type: USER_SIGNIN_SUCCESS, payload: data});
             Cookie.set('userInfo', JSON.stringify(data));
         }else{
             console.log("User id is undefined")
