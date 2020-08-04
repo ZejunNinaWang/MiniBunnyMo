@@ -16,6 +16,7 @@ var getToken = function getToken(user) {
     _id: user._id,
     name: user.name,
     email: user.email,
+    avatar: user.avatar,
     isAdmin: user.isAdmin
   }, _config["default"].JWT_SECRET, {
     expiresIn: '48h'

@@ -36,7 +36,6 @@ productRoute.get('/:id', async (req, res) => {
 });
 
 productRoute.post("/", async (req, res) => {
-  console.log("in post product");
   try {
     const product = new Product({
       name: req.body.name,

@@ -583,4 +583,77 @@ a > .rating > span:last-child{
   font-size: 1.6rem;
 }
 
+/*AvatarScreen*/
+
+.avatar-icon {
+  vertical-align: middle;
+  width: 35px;
+  height: 35px;
+  border-radius: 50%;
+}
+canvas {
+  position: absolute;
+  /* background-color: red; */
+  z-index: 10;
+  /* border: 1rem red solid; */
+}
+.avatar{
+  display: flex;
+  justify-content: space-evenly;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  padding: 1rem;
+}
+
+.avatar-upload{
+  flex: 1 1 30rem;
+  margin: 0;
+  padding: 0;
+}
+
+.avatar-upload li{
+  list-style-type: none;
+  /* width: 100%; */
+  
+}
+
+.video{
+  /* width: 34rem; 100% to be responsive? */
+  width: 39.5rem;
+  height: auto;
+}
+
+.button-selfie-li{
+  display: flex;
+  /* align-items: center; */
+  justify-content: space-between;
+  margin: 0 auto;
+}
+.button-selfie-li button{
+  flex: 0.5;
+}
+
+.button.selfie{
+  /* text-align: center; */
+  flex: 0.5;
+  margin: 0 auto;
+}
+
+.button.selfie:focus {
+  outline:none;
+  box-shadow: none;
+}
+
+.button.selfie:active {
+  background-color: rgb(209, 125, 139);
+}
+
+
+
+.avatar-generated{
+  flex: 1 1 30rem;
+}
+
+
+
 

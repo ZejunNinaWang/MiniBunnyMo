@@ -32,6 +32,7 @@ userRoute.post("/signin", async (req, res) => {
               _id: signinUser.id,
               name: signinUser.name,
               email: signinUser.email,
+              avatar: signinUser.avatar,
               isAdmin: signinUser.isAdmin,
               token: getToken(signinUser),
             });
@@ -57,6 +58,7 @@ userRoute.post("/signin", async (req, res) => {
         _id: updatedUser.id,
         name: updatedUser.name,
         email: updatedUser.email,
+        avatar: updatedUser.avatar,
         isAdmin: updatedUser.isAdmin,
         token: getToken(updatedUser),
       });
@@ -82,6 +84,7 @@ userRoute.post("/signin", async (req, res) => {
             _id: newUser.id,
             name: newUser.name,
             email: newUser.email,
+            avatar: newUser.avatar,
             isAdmin: newUser.isAdmin,
             token: getToken(newUser),
           });
@@ -92,5 +95,27 @@ userRoute.post("/signin", async (req, res) => {
         res.status(500).send({msg: error.message});
     }
   });
+
+userRoute.put('/:id/avatars', isAuth, async (req, res) => {
+  console.log("in put avatars")
+  const user = await User.findById(req.params.id);
+  console.log("user is ", user)
+  if(user){
+    user.avatar = req.body.fileName || user.avatar;
+    const updatedUser = await user.save();
+    console.log("avatar updated")
+    res.status(200).send({
+      _id: updatedUser.id,
+      name: updatedUser.name,
+      email: updatedUser.email,
+      avatar: updatedUser.avatar,
+      isAdmin: updatedUser.isAdmin,
+      token: getToken(updatedUser),
+    });
+  } else {
+    res.status(404).send({ message: 'User Not Found' });
+  }
+});
+
  
 export default userRoute;

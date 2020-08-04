@@ -14,7 +14,8 @@ import orderRoute from './routes/orderRoute';
 import uploadRoute from './routes/uploadRoute';
 
 const mongodbUrl = config.MONGODB_URL;
-let gfs;
+let gfs;//For product images
+let gfsAvatars;//For avatar images
 //Connect to MongoDB
 mongoose
   .connect(mongodbUrl, {
@@ -29,8 +30,16 @@ mongoose
 mongoose.connection.on('connected', () => {
     console.log('Connection opened');
     //Init stream
-    gfs = Grid(mongoose.connection.db, mongoose.mongo);
-    gfs.collection('uploads');
+    // gfs = Grid(mongoose.connection.db, mongoose.mongo);
+    // gfs.collection('uploads');
+
+    gfs = new mongoose.mongo.GridFSBucket(mongoose.connection.db, {
+      bucketName: 'uploads'
+    });
+
+    gfsAvatars = new mongoose.mongo.GridFSBucket(mongoose.connection.db, {
+      bucketName: 'avatars'
+    });
 })
 
 // let gfs;
@@ -64,19 +73,41 @@ app.use('/api/orders', orderRoute);
 app.use("/api/uploads", uploadRoute);
 
 app.get('/api/image/:filename', (req, res) => {
-  gfs.files.findOne({ filename: req.params.filename }, (err, file) => {
+  gfs.find({ filename: req.params.filename }).toArray((err, files) => {
     // Check if file
-    if (!file || file.length === 0) {
+    if (!files[0] || files.length === 0) {
       return res.status(404).json({
         err: 'No file exists'
       });
     }
 
     // Check if image
-    if (file.contentType === 'image/jpeg' || file.contentType === 'image/png') {
+    if (files[0].contentType === 'image/jpeg' || files[0].contentType === 'image/png') {
       // Read output to browser
-      const readstream = gfs.createReadStream(file.filename);
-      readstream.pipe(res);
+      // const readstream = gfs.createReadStream(file.filename);
+      // readstream.pipe(res);
+      gfs.openDownloadStreamByName(req.params.filename).pipe(res);
+    } else {
+      res.status(404).json({
+        err: 'Not an image'
+      });
+    }
+  });
+});
+
+
+app.get('/api/avatars/:filename', (req, res) => {
+  gfsAvatars.find({ filename: req.params.filename }).toArray((err, files) => {
+    // Check if file
+    if (!files[0] || files.length === 0) {
+      return res.status(404).json({
+        err: 'No file exist'
+      });
+    }
+
+    // Check if image
+    if (files[0].contentType === 'image/jpeg' || files[0].contentType === 'image/png') {
+      gfsAvatars.openDownloadStreamByName(req.params.filename).pipe(res);
     } else {
       res.status(404).json({
         err: 'Not an image'
@@ -86,7 +117,9 @@ app.get('/api/image/:filename', (req, res) => {
 });
 
 //config server to serve files inside uploads folder
-// app.use('/uploads', express.static(path.join(__dirname, '/../uploads')));
+app.use('/models', express.static(path.join(__dirname, '/../models')));
+app.use('/masks', express.static(path.join(__dirname, '/../mask_images')));
+
 
 //Serve static assets if in production
 if(process.env.NODE_ENV === 'production'){
@@ -98,3 +131,4 @@ if(process.env.NODE_ENV === 'production'){
 }
 
 app.listen(config.PORT, () => {console.log("Server started at http://localhost:5000")});
+// app.listen(9229, () => {console.log("Server started at http://localhost:9229")});

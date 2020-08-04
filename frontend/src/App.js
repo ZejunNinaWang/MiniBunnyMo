@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import React, { useRef, useEffect } from 'react';
 import {BrowserRouter, Route, Link} from 'react-router-dom'
 import './App.css';
 
@@ -16,6 +16,7 @@ import PlaceOrderScreen from './screens/PlaceOrderScreen';
 import OrderScreen from './screens/OrderScreen';
 import ProfileScreen from './screens/ProfileScreen';
 import OrdersScreen from './screens/OrdersScreen';
+import AvatarScreen from './screens/AvatarScreen';
 
 
 function App() {
@@ -39,6 +40,14 @@ function App() {
         closeMenu();
     }
   }
+
+  useEffect(() => { 
+    console.log("userInfo is ", userInfo)
+    return () => {
+
+    };
+}, []);
+
   return (
     <BrowserRouter>
       <div className="grid-container">
@@ -53,7 +62,9 @@ function App() {
                   <div className="header-links">
                       {/* <a href="cart.html">Cart</a> */}
                       <Link to="/cart">Cart</Link>
-                      {userInfo && userInfo.name ? (<Link to="/profile">{userInfo.name}</Link>) : (<Link to="/signin">Sign In</Link>)}
+                      {/* {userInfo && userInfo.name ? (<Link to="/profile">{userInfo.name}</Link>) : (<Link to="/signin">Sign In</Link>)} */}
+                      {userInfo && userInfo.name ? (<Link to="/profile">{!userInfo.avatar?userInfo.name:
+                      <img src={"/api/avatars/"+userInfo.avatar} alt="Avatar" className="avatar-icon"></img>}</Link>) : (<Link to="/signin">Sign In</Link>)}
                       {userInfo && userInfo.isAdmin && (
                           <div className="dropdown">
                             <a href="#" >Admin</a>
@@ -87,6 +98,7 @@ function App() {
               <main className="main">
                   <div className="content">
                       {/* <Switch> */}
+                      <Route path="/avatar" component={AvatarScreen} />
                       <Route path="/profile" component={ProfileScreen} />
                       <Route path="/order/:id" component={OrderScreen} />
                       <Route path="/orders" component={OrdersScreen} />
