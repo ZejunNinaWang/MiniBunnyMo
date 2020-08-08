@@ -10,7 +10,9 @@ import { likeProduct, removeLikeProduct } from '../actions/likeActions';
 function HomeScreen(props){
     const category = props.match.params.id ? props.match.params.id : '';
     const [searchKeyword, setSearchKeyword] = useState('');
-    const [sortOrder, setSortOrder] = useState('');
+    const [priceOrder, setPriceOrder] = useState('');
+    const [genderOrder, setGenderOrder] = useState('');
+    const [countryOrder, setCountryOrder] = useState('');
     //map state to props
     const productList = useSelector(state => state.productList); // productList is set to the state defined from the productList reducer
     const {products, loading, error} = productList;
@@ -24,17 +26,22 @@ function HomeScreen(props){
     useEffect(() => {
         // redux can guarantee that the dispatch function will not change between renders.
         // so we don't need to wrap it with useCallback for now.
-        dispatch(listProducts(category, searchKeyword, sortOrder));
-        console.log("likesByProductId is ", likesByProductId);
+        dispatch(listProducts(category, searchKeyword, priceOrder, genderOrder, countryOrder));
         return () => {
             //clean up
         };
-    }, [category, sortOrder])
+    }, [category])
 
-    const submitHandler = (e) => {
+    const search = (e) => {
         e.preventDefault();
-        dispatch(listProducts(category, searchKeyword, sortOrder));
+        dispatch(listProducts(category, searchKeyword, priceOrder, genderOrder, countryOrder));
       };
+
+    const handleKeyDown = (e) => {
+        if(e.key === 'Enter'){
+            dispatch(listProducts(category, searchKeyword, priceOrder, genderOrder, countryOrder));
+        }
+    }
 
     const like = (productId) => {
         console.log("like product: ", productId);
@@ -48,40 +55,56 @@ function HomeScreen(props){
         }
         
 
-    }
-
-
-    // const sortHandler = (e) => {
-    //     console.log("In sortHandler: e.target.value is ",e.target.value );
-    //     setSortOrder(e.target.value);
-    //     console.log("In sortHandler: sortOrder is ",sortOrder );
-    //     dispatch(listProducts(category, searchKeyword, sortOrder));
-    //   };
-    
+    }    
 
     return(
         <div>
             {category && <h2 className="category-title">{category}</h2>}
 
             <div className="filter">
-                <div className="search">
-                    <form onSubmit={submitHandler}>
-                    <input
-                        name="searchKeyword"
-                        onChange={(e) => setSearchKeyword(e.target.value)}
-                    />
-                    <button type="submit" className="button">Search</button>
-                    </form>
-                </div>
+                
                 
                 <div className="filter-select">
-                    Sort By{'  '}
+                    Price{'  '}
                     {/* <select name="sortOrder" onChange={sortHandler}> */}
-                    <select name="sortOrder" onChange={(e)=>setSortOrder(e.target.value)}>
-                    <option value="">Newest</option>
+                    <select name="priceOrder" onChange={(e)=>setPriceOrder(e.target.value)}>
+                    <option value="">- Any -</option>
                     <option value="lowest">Lowest</option>
                     <option value="highest">Highest</option>
                     </select>
+                </div>
+
+                <div className="filter-select">
+                    Gender{'  '}
+                    <select name="genderOrder" onChange={(e)=>setGenderOrder(e.target.value)}>
+                    <option value="">- Any -</option>
+                    <option value="male">male</option>
+                    <option value="female">female</option>
+                    </select>
+                </div>
+
+                <div className="filter-select">
+                    Country{'  '}
+                    <select name="countryOrder" onChange={(e)=>setCountryOrder(e.target.value)}>
+                    <option value="">- Any -</option>
+                    <option value="Canada">Canada</option>
+                    <option value="United States">United States</option>
+                    </select>
+                </div>
+                <div className="search">
+                    {/* <form onSubmit={submitHandler}> */}
+                    Keyword Search{'  '}
+                    <input 
+                        name="searchKeyword"
+                        onChange={(e) => setSearchKeyword(e.target.value)}
+                        onKeyDown={handleKeyDown}
+                    />
+                    {/* <button type="submit" className="button">Search</button> */}
+                    {/* </form> */}
+                </div>
+
+                <div>
+                    <button type="submit" className="button" onClick={search}>Search</button>
                 </div>
             </div>
             {
@@ -93,7 +116,7 @@ function HomeScreen(props){
                     {     
                         products.map(product => {
                             return(
-                            <li key={product._id}>
+                            <li key={product._id} className="grow">
                                 <div className="product">
                                     <Link to={'/product/' + product._id}>
                                         {/* <img className="product-image" src={"api/image/"+product.image} alt="product"/> */}

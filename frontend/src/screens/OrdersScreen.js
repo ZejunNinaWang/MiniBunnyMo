@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
-import { listOrders, deleteOrder } from '../actions/orderActions';
+import { listOrders, deleteOrder, listMyOrders } from '../actions/orderActions';
 
 function OrdersScreen(props) {
-  const orderList = useSelector(state => state.orderList);
-  const { loading, orders, error } = orderList;
+  const myOrderList = useSelector(state => state.myOrderList);
+  const { loading, orders, error } = myOrderList;
 
   const orderDelete = useSelector(state => state.orderDelete);
   const { loading: loadingDelete, success: successDelete, error: errorDelete } = orderDelete;
@@ -13,7 +13,7 @@ function OrdersScreen(props) {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    dispatch(listOrders());
+    dispatch(listMyOrders());
     return () => {
       //
     };
@@ -29,8 +29,9 @@ function OrdersScreen(props) {
         <h3>Orders</h3>
       </div>
       <div className="order-list">
-
-        <table className="table">
+        {
+          orders.length !== 0 ? 
+<table className="table">
           <thead>
             <tr>
               <th>ID</th>
@@ -62,6 +63,10 @@ function OrdersScreen(props) {
             </tr>))}
           </tbody>
         </table>
+        :
+        <div>You don't have orders yet.</div>
+        }
+        
 
       </div>
     </div>

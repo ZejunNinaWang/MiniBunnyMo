@@ -68,7 +68,7 @@ function App() {
                             <a href="#" >Admin</a>
                             <ul className="dropdown-content">
                                 <li>
-                                    <Link to="/products">Products</Link>
+                                    <Link to="/products">Pets</Link>
                                     <Link to="/orders">Orders</Link>
                                 </li>
                             </ul>

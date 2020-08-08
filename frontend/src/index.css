@@ -1,3 +1,9 @@
+:root{
+  --lightPink: #F7E1D7;
+  --lightGreen: #a3b9a4;
+  --lightGreen2: #becfbf;
+  --darkGreen: #4A5759;
+}
 html{
   font-size: 62.5%; /*16px * 62.5% = 10px = 1rem */
   box-sizing: border-box;
@@ -34,7 +40,7 @@ body{
 
 .header{
   grid-area: header;
-  background-color: #203040;
+  background-color: var(--darkGreen);
   color: #ffffff;
   display: flex;
   justify-content: space-between;
@@ -63,7 +69,7 @@ body{
 }
 .footer{
   grid-area: footer;
-  background-color: #203040;
+  background-color: var(--darkGreen);
   color: #ffffff;
   display: flex;
   justify-content: center;
@@ -91,7 +97,15 @@ a:hover{
   flex: 0 1 34rem;/*flex-grow(not growable), flex-shrink(shrinkable), flex-basis; */
   margin: 1rem;
   height: 50rem;
-  border-bottom: 0.1rem #c0c0c0 solid;
+  border-bottom: 0.1rem var(--lightGreen) solid;
+}
+
+.grow { 
+  transition: all .2s ease-in-out; 
+  }
+  
+.grow:hover { 
+transform: scale(1.07); 
 }
 
 .product{
@@ -103,6 +117,9 @@ a:hover{
 .product-name{
   font-size: 2rem;
   font-weight: bold;
+}
+.product-name a{
+  color: black;
 }
 .product-category{
   font-size: 1.2rem;
@@ -150,7 +167,7 @@ ul.review{
 
 /*Rating component*/
 .rating span{
-  color: pink;
+  color: var(--lightGreen);
   font-size: 1.8rem;
   margin: 0.1rem;
 }
@@ -168,7 +185,7 @@ a > .rating > span:last-child{
 
 }
 .fa-heart.half:before {
-    background: -webkit-linear-gradient(180deg,#ffffff 0%, #ffffff 50%,pink 50%);
+    background: -webkit-linear-gradient(180deg,#ffffff 0%, #ffffff 50%,var(--lightGreen) 50%);
     -webkit-text-fill-color: transparent;
     -webkit-background-clip: text;
 
@@ -179,14 +196,17 @@ a > .rating > span:last-child{
   text-align: right;
 }
 .like span{
-  color: pink;
+  color: var(--lightGreen);
   font-size: 1.8rem;
   margin: 0.1rem;
 }
 a > .like > span{
-  color: pink;
+  color: var(--lightGreen);
 }
 
+.details-like .like{
+  text-align: left;
+}
 
 
 /*Sidebar*/
@@ -223,17 +243,17 @@ a > .like > span{
 .categories a {
   display: flex;
   padding: 1rem;
-  color: #203040;
+  color: var(--darkGreen);
 }
 
 .categories a:hover {
   background-color: #c0c0c0;
-  color: #203040;
+  color: var(--darkGreen);
 }
 
 .sidebar-close-button{
   border-radius: 50%;
-  border: 0.1rem #203040 solid;
+  border: 0.1rem var(--darkGreen) solid;
   width: 3rem;
   height: 3rem;
   font-size: 2rem;
@@ -247,7 +267,7 @@ a > .like > span{
 }
 
 .sidebar-close-button:hover{
-  background-color: #203040;
+  background-color: var(--darkGreen);
   color: #f0f0f0;
 }
 
@@ -261,10 +281,10 @@ a > .like > span{
 }
 
 .details-image{
-  flex: 2 1 40rem;
+  flex: 2 1 20rem;
 }
 .details-image img{
-  max-width: 60rem;
+  /* max-width: 60rem; */
   width: 100%;
 }
 .details-info{
@@ -275,6 +295,7 @@ a > .like > span{
 
 .details-description{
   font-size: 1.4rem;
+
 }
 
 .details-action{
@@ -303,24 +324,35 @@ a > .like > span{
 
 .button,.avatar-file-upload{
   padding: 1rem;
-  border: 0.1rem #808080 solid;
+  border: 0.1rem var(--lightGreen) solid;
   border-radius: 0.5rem;
   cursor: pointer;
-  background-color: pink;
+  background-color: var(--lightGreen);
   text-align: center;
+
+  color: white;
+  font-weight: bold;
 }
 
 .button:hover,.avatar-file-upload:hover{
-  border: 0.1rem #404040 solid;
+  border: 0.1rem var(--lightGreen2) solid;
+  background-color: var(--lightGreen2);
 }
 
 .button.secondary{
   background-color: #f0f0f0;
+  border: 0.1rem #f0f0f0 solid;
+  color: var(--darkGreen);
+}
+.button.secondary:hover{
+  background-color: #f8f8f8;
 }
 
-
-.back-to-result{
-  padding: 1rem;
+.back-to-result a{
+  color: var(--darkGreen);
+}
+.back-to-result a:hover{
+  color: var(--lightGreen);
 }
 
 
@@ -469,14 +501,12 @@ a > .like > span{
   color:#c0c0c0; /*text color*/
 }
 
-.checkout-steps div a{
-  color:#c0c0c0; /*text color*/
-  color: rgb(209, 125, 139); /*text color*/
+.checkout-steps div.active{
+  border-top: 0.3rem var(--lightGreen) solid;
 }
 
-.checkout-steps div.active{
-  border-top: 0.3rem rgb(209, 125, 139) solid;
-  
+.checkout-steps > div.active > a.active{
+  color: var(--lightGreen);
 }
 
 /*Register Steps*/
@@ -494,9 +524,11 @@ a > .like > span{
   font-weight: bold;
 }
 .register-steps > div.active {
-  border-top: 0.3rem rgb(209, 125, 139) solid;
-  color: rgb(209, 125, 139);
+  border-top: 0.3rem var(--lightGreen) solid;
+  color: var(--lightGreen);
 }
+
+
 
 /*Place Order*/
 .placeorder{
@@ -597,7 +629,7 @@ a > .like > span{
   padding: 1rem;
   list-style-type: none;
   z-index: 1;
-  background-color: #203040;
+  background-color: var(--darkGreen);
   margin: 0;
   margin-top: 0.4rem;
 }
@@ -610,23 +642,44 @@ a > .like > span{
 .filter{
   display: flex;
   list-style-type: none;
-  justify-content: space-between;
-  align-items: center;
+  justify-content: space-evenly;
+  align-items: flex-end;
   margin: 1rem auto;
   /* margin-top: 1rem;
   margin-bottom: 1rem;
   margin-right: 1rem; */
-  max-width: 50rem;
+  max-width: 100rem;
+
+  border: 0.1rem var(--lightGreen) solid;
+  border-radius: 0.5rem;
+  background-color: white;
+  padding: 1rem;
+  flex-wrap: wrap;
 }
 
+.filter>div{
+  display: grid;
+  margin: 0.5rem;
+  color: var(--darkGreen);
+}
 
 .filter input,
-.filter button,
 .filter select {
   padding: 1rem;
   border-radius: 0.5rem;
-  border: 0.1rem #c0c0c0 solid;
+  border: 0.1rem var(--lightGreen) solid;
   font-size: 1.6rem;
+  width: 15rem;
+  color: var(--darkGreen);
+}
+
+.filter button{
+  /* padding: 1rem; */
+  /* border-radius: 0.5rem; */
+  /* border: 0.1rem #c0c0c0 solid; */
+  font-size: 1.6rem;
+  width: 15rem;
+
 }
 
 /*AvatarScreen*/
@@ -637,7 +690,15 @@ a > .like > span{
   height: 35px;
   border-radius: 50%;
   margin: 0 auto;
+  border: 0.1rem var(--darkGreen) solid;
 }
+
+.avatar-icon:hover {
+  border: 0.1rem var(--lightGreen) solid;
+}
+/* .form-container .avatar-icon{
+  border: 0.1rem white solid;
+} */
 canvas {
   position: absolute;
   /* background-color: red; */
@@ -706,7 +767,7 @@ canvas {
 }
 
 .button.selfie:active {
-  background-color: rgb(209, 125, 139);
+  background-color: var(--lightGreen2);
 }
 
 .AvatarInput{
@@ -715,6 +776,7 @@ canvas {
 
 .avatar-file-upload{
   font-size: 1.4rem;
+  margin-right: 0.5rem
 }
 
 

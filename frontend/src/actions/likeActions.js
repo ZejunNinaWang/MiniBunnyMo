@@ -85,9 +85,21 @@ const removeLikeProduct = (productId) => async (dispatch, getState) => {
     }
 }
 
+//called when deleting product
+const removeAllLikeOfProduct = (productId) => async (dispatch, getState) => {
+    //TODO: remove all likes of this product in DB, 
+    //remove like entry of this productId in likes dict on frontend
+}
+
+//called when creating product
+const addLikeEntry = (productId) => async (dispatch, getState) => {
+    //TODO: add like entry of this productId in likes dict on frontend
+}
+
+//reset likes dict on frontend
 const resetLikes = () => async (dispatch, getState) => {
     //called when log out
     dispatch({type: RESET_LIKE});
 }
 
-export {getAllLikes, likeProduct, removeLikeProduct, resetLikes}
+export {getAllLikes, likeProduct, removeLikeProduct, resetLikes, removeAllLikeOfProduct, addLikeEntry}

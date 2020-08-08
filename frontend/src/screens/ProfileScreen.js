@@ -84,9 +84,11 @@ function ProfileScreen(props){
            </div>
         </div>
         <div className="profile-orders content-margined">
-        {
+            <div><h3>Your Orders:</h3></div>
+        {   
             loadingOrders ? <div>Loading...</div> :
             errorOrders ? <div>{errorOrders} </div> :
+            orders.length !== 0 ?
             <div className="order-list">
                 <table >
                 <thead>
@@ -111,6 +113,7 @@ function ProfileScreen(props){
                 </tbody>
                 </table>
                 </div>
+                : <div>You don't have orders yet.</div>
         }
         </div>
     </div>

@@ -6,23 +6,39 @@ const productRoute = express.Router();
 
 productRoute.get('/', async (req, res) => {
   const category = req.query.category ? { category: req.query.category } : {};
+  const gender = req.query.genderOrder ? { gender: req.query.genderOrder } : {};
+  const country = req.query.countryOrder ? { country: req.query.countryOrder } : {};
   const searchKeyword = req.query.searchKeyword
-    ? {
-        name: {
-          $regex: req.query.searchKeyword,
-          $options: 'i', //case insensitive
-        },
+    ? { $or: [
+          {name: {
+              $regex: req.query.searchKeyword,
+              $options: 'i', //case insensitive
+            } 
+          },
+          {description: {
+              $regex: req.query.searchKeyword,
+              $options: 'i', //case insensitive
+            } 
+          }
+        ]
       }
     : {};
-  const sortOrder = req.query.sortOrder
-    ? req.query.sortOrder === 'lowest'
+  const priceOrder = req.query.priceOrder
+    ? req.query.priceOrder === 'lowest'
       ? { price: 1 } //ascending
       : { price: -1 } //descending
     : { _id: -1 };
-  const products = await Product.find({ ...category, ...searchKeyword }).sort(sortOrder);
+  const products = await Product.find({ ...category, ...searchKeyword, ...gender, ...country }).sort(priceOrder);
   res.send(products);
 
 });
+
+productRoute.get('/mine', isAuth, async (req, res) => {
+  console.log("req.user.email is ", req.user.email)
+  const products = await Product.find({ sellerEmail: req.user.email});
+  console.log("products ", products);
+  res.send(products);
+})
 
 productRoute.get('/:id', async (req, res) => {
   const product = await Product.findById(req.params.id);
@@ -39,10 +55,12 @@ productRoute.post("/", isAuth, isAdmin, async (req, res) => {
       name: req.body.name,
       price: req.body.price,
       image: req.body.image,
-      brand: req.body.brand,
+      country: req.body.country,
       category: req.body.category,
       countInStock: req.body.countInStock,
       description: req.body.description,
+      gender: req.body.gender,
+      seller: req.user.email
       // rating: req.body.rating,
       // numReviews: req.body.numReviews,
     });
@@ -69,10 +87,11 @@ productRoute.put("/:id", isAuth, isAdmin, async (req, res) => {
       product.name = req.body.name;
       product.price = req.body.price;
       product.image = req.body.image;
-      product.brand = req.body.brand;
+      product.country = req.body.country;
       product.category = req.body.category;
       product.countInStock = req.body.countInStock;
       product.description = req.body.description;
+      product.gender = req.body.gender;
 
       const updatedProduct = await product.save();
       if(updatedProduct){

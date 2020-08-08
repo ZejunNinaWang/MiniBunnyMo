@@ -53,6 +53,7 @@ function likesByProductIdReducer(state={likesByProductId:{}}, action){
 
         case ADD_LIKE_ENTRY:
             //called when create new product
+            
 
         case REMOVE_ADD_ENTRY:
             //called when delete product

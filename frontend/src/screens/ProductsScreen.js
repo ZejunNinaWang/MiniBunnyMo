@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { signin } from '../actions/userActions';
-import { saveProduct, listProducts, deleteProduct } from '../actions/productActions';
+import { saveProduct, listProducts, deleteProduct, listMyProducts } from '../actions/productActions';
 import axios from 'axios';
 
 
@@ -15,19 +15,23 @@ function ProductsScreen(props){
     const [name, setName] = useState('');
     const [price, setPrice] = useState(0);
     const [image, setImage] = useState('');
-    const [brand, setBrand] = useState('');
+    const [country, setCountry] = useState('');
     const [category, setCategory] = useState('');
+    const [gender, setGender] = useState('');
     const [countInStock, setCountInStock] = useState(0);
     const [description, setDescription] = useState('');
     const [uploading, setUploading] = useState(false);
     
     const [inCompleteInfo, setInCompleteInfo] = useState(false);
 
-    const productList = useSelector(state=>state.productList);
-    const {loading, products, error} = productList;
+    // const productList = useSelector(state=>state.productList);
+    // const {loading, products, error} = productList;
 
     const productSave = useSelector(state => state.productSave);
     const {loading: loadingSave, success: successSave, error: errorSave} = productSave;
+
+    const myProductList = useSelector(state => state.myProductList);
+    const {loading, products, error} = myProductList;
 
     const productDelete = useSelector(state=>state.productDelete);
     const {loading: loadingDelete, success: successDelete, error: errorDelete} = productDelete;
@@ -39,7 +43,7 @@ function ProductsScreen(props){
         if(successSave){
             setModelVisible(false);
         }
-        dispatch(listProducts());
+        dispatch(listMyProducts());
         return () => {
 
         };
@@ -55,14 +59,15 @@ function ProductsScreen(props){
         setPrice(product.price);
         setDescription(product.description);
         setImage(product.image);
-        setBrand(product.brand);
+        setCountry(product.country);
         setCategory(product.category);
         setCountInStock(product.countInStock);
+        setGender(product.gender);
       };
 
     const submitHandler = (e) => {
         e.preventDefault();
-        if(!name || !image || !brand || !category || !description){
+        if(!name || !image || !country || !category || !description){
             console.log("Incomplete product infomation");
             setInCompleteInfo(true);
 
@@ -75,10 +80,11 @@ function ProductsScreen(props){
                 name,
                 price,
                 image,
-                brand,
+                country,
                 category,
                 countInStock,
                 description,
+                gender,
               }));
         }
 
@@ -114,8 +120,8 @@ function ProductsScreen(props){
         
     <div className="content content-margined">
         <div className="product-header">
-            <h3>Products</h3>
-            <button className="button"onClick={() => openModal({})}>Create Product</button>
+            <h3>Your Pets</h3>
+            <button className="button"onClick={() => openModal({})}>Add Your Pet</button>
         </div>
         
 
@@ -124,12 +130,12 @@ function ProductsScreen(props){
         <div className='form'>
             <form onSubmit={submitHandler}>
                 <ul className="form-container">
-                    <li><h2>Create Product</h2></li>
+                    <li><h2>Add Your Pet</h2></li>
                     {loadingSave && <div>Loading</div>}
                     {errorSave && <div className="error">{errorSave}</div>}
                     {inCompleteInfo && <div className="error">Please complete product infomation</div>}
                     <li>
-                        <label htmlFor="name">Name</label>
+                        <label htmlFor="name">Title</label>
                         <input type="text" name="name" value={name} id="name" onChange={(e) => setName(e.target.value)}></input>
                     </li>
                     <li>
@@ -155,18 +161,38 @@ function ProductsScreen(props){
                         <input type="file" onChange={uploadFileHandler}></input>
                         {uploading && <div>Uploading...</div>}
                     </li>
-                    <li>
-                        <label htmlFor="brand">Brand</label>
+                    {/* <li>
+                        <label htmlFor="country">Country</label>
                         <input
                         type="text"
-                        name="brand"
-                        value={brand}
-                        id="brand"
-                        onChange={(e) => setBrand(e.target.value)}
+                        name="country"
+                        value={country}
+                        id="country"
+                        onChange={(e) => setCountry(e.target.value)}
                         ></input>
+                    </li> */}
+                    <li>
+                        <label htmlFor="country">Country</label>
+                        <select name="country" 
+                            value={country}
+                            onChange={(e) => setCountry(e.target.value)}>
+                            <option value="">-Choose a country-</option>
+                            <option value="Canada">Canada</option>
+                            <option value="United States">United States</option>
+                        </select>
                     </li>
                     <li>
-                        <label htmlFor="countInStock">CountInStock</label>
+                        <label htmlFor="gender">Gender</label>
+                        <select name="gender" 
+                            value={gender}
+                            onChange={(e) => setGender(e.target.value)}>
+                            <option value="">-Choose a gender-</option>
+                            <option value="male">male</option>
+                            <option value="female">female</option>
+                        </select>
+                    </li>
+                    <li>
+                        <label htmlFor="countInStock">Count in stock</label>
                         <input
                         type="text"
                         name="countInStock"
@@ -190,7 +216,7 @@ function ProductsScreen(props){
                         <select name="category" 
                             value={category}
                             onChange={(e) => setCategory(e.target.value)}>
-                            <option value="">Choose a category</option>
+                            <option value="">-Choose a category-</option>
                             <option value="Cashmere Lop">Cashmere Lop</option>
                             <option value="American Fuzzy Lop">American Fuzzy Lop</option>
                             <option value="French Lop">French Lop</option>
@@ -209,7 +235,7 @@ function ProductsScreen(props){
                     <button 
                     type="submit" 
                     className="button"
-                    disabled={!name || !image || !brand || !category || !description}
+                    disabled={!name || !image || !country || !category || !description}
                     >{id? "Edit" : "Create"}</button>
                     </li>
                     <li>
@@ -226,34 +252,42 @@ function ProductsScreen(props){
         }   
 
         <div className="product-list">
-            <table>
-                <thead>
-                    <tr>
-                        <th>ID</th>
-                        <th>Name</th>
-                        <th>Price</th>
-                        <th>Category</th>
-                        <th>Brand</th>
-                        <th>Action</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {products && products.map(product => (
+            {
+                products && products.length !== 0 ?
+                <table>
+                    <thead>
                         <tr>
-                            <td>{product._id}</td>
-                            <td>{product.name}</td>
-                            <td>{product.price}</td>
-                            <td>{product.category}</td>
-                            <td>{product.brand}</td>
-                            <td>
-                                <button className="button secondary" onClick={() => openModal(product)}>Edit</button>
-                                {' '}
-                                <button className="button secondary" onClick={() => deleteHandler(product._id)}>Delete</button>
-                            </td>
+                            <th>ID</th>
+                            <th>Name</th>
+                            <th>Price</th>
+                            <th>Category</th>
+                            <th>Gender</th>
+                            <th>Country</th>
+                            <th>Action</th>
                         </tr>
-                    ))}
-                </tbody>
-            </table>
+                    </thead>
+                    <tbody>
+                        {products && products.map(product => (
+                            <tr>
+                                <td>{product._id}</td>
+                                <td>{product.name}</td>
+                                <td>{product.price}</td>
+                                <td>{product.category}</td>
+                                <td>{product.gender}</td>
+                                <td>{product.country}</td>
+                                <td>
+                                    <button className="button secondary" onClick={() => openModal(product)}>Edit</button>
+                                    {' '}
+                                    <button className="button secondary" onClick={() => deleteHandler(product._id)}>Delete</button>
+                                </td>
+                            </tr>
+                        ))}
+                    </tbody>
+                </table>
+                :
+                <div>You don't have pets added yet.</div>
+            }
+            
 
         </div>
     </div>

@@ -5,6 +5,8 @@ import { detailsProducts, saveProductReview } from '../actions/productActions';
 import Rating from '../components/Rating';
 import { PRODUCT_REVIEW_SAVE_RESET } from '../constants/productConstants';
 import { productReviewSaveReducer } from '../reducers/productReducers';
+import Like from '../components/Like';
+import { removeLikeProduct, likeProduct } from '../actions/likeActions';
 
 
 function ProductScreen(props){
@@ -12,6 +14,9 @@ function ProductScreen(props){
     const [qty, setQty] = useState(1); 
     const productDetails = useSelector(state => state.productDetails);
     const {product, loading, error} = productDetails;
+
+    const likes = useSelector(state => state.likes);
+    const {likesByProductId} = likes;
     
 
     //props for review section
@@ -35,7 +40,7 @@ function ProductScreen(props){
             window.location.reload();
         }
 
-        dispatch(detailsProducts(props.match.params.id));    
+        dispatch(detailsProducts(props.match.params.id));   
 
         return () => {
 
@@ -59,8 +64,22 @@ function ProductScreen(props){
         );
       };
 
+      const like = (productId) => {
+        console.log("like product: ", productId);
+        if(likesByProductId[productId] === true){
+            //if already like, then remove like
+            console.log("remove like");
+            dispatch(removeLikeProduct(productId));
+        } else {
+            //like
+            dispatch(likeProduct(productId));
+        }
+        
+
+    }
+
     return(
-        <div>
+        <div className="content-margined">
             <div className="back-to-result">
                 <Link to="/">Back to results</Link>
             </div>
@@ -74,18 +93,35 @@ function ProductScreen(props){
                         </div>
                         <div className="details-info">
                             <ul>
+                                
+                                {/* <li className="product-category">s{product.category}</li> */}
+                                <li>
+                                    {/* <a href="#reviews"> */}
+                                        {/* <Rating value={product.rating} text={product.numReviews + ' reviews'}/> */}
+                                    {/* </a> */}
+                                    <div className="details-like">
+                                    <Link onClick={() => like(product._id)}>
+                                        <Like like={likesByProductId[product._id]}/>
+                                    </Link>
+
+                                    </div>
+
+                                </li>
                                 <li>
                                     <h4>{product.name}</h4>
                                 </li>
-                                {/* <li className="product-category">s{product.category}</li> */}
-                                <li>
-                                    {/* {product.rating} Carrots ({product.numReviews}) */}
-                                    <a href="#reviews">
-                                        <Rating value={product.rating} text={product.numReviews + ' reviews'}/>
-                                    </a>
-                                </li>
                                 <li>
                                     Price: <b>${product.price}</b>
+                                </li>
+                                <li>
+                                    Gender: {product.gender}
+                                </li>
+                                <li>
+                                    Seller Contact: 
+                                    <div>
+                                    {product.sellerEmail}
+                                    </div>
+                                    
                                 </li>
                                 <li>
                                     Description:
@@ -115,28 +151,28 @@ function ProductScreen(props){
                         </div>  
 
                     </div>
-                    <div className="content-margined">
-                        <h2>Reviews</h2>
+                    <div >
+                        <h2>Comments</h2>
                         
                         <ul className="review" id="reviews"> 
-                        {product.numReviews === 0 ? <li><div>There is no review</div></li> : 
+                        {product.numReviews === 0 ? <li><p>There is no review</p></li> : 
                         
                         product.reviews.map((review) => (
                             <li className="review-item" key={review._id}>
                             <div className="review-name">{review.name}</div>
-                            <div>
+                            {/* <div>
                                 <Rating value={review.rating}></Rating>
-                            </div>
+                            </div> */}
                             <div className="review-date">{review.createdAt.substring(0, 10)}</div>
                             <div className="review-comment">{review.comment}</div>
                             </li>
                         ))}
                         <li>
-                            <h3>Write a customer review</h3>
+                            <h3>Write a comment</h3>
                             {userInfo && userInfo.name ? (
                             <form onSubmit={submitHandler}>
                                 <ul className="form-container">
-                                <li>
+                                {/* <li>
                                     <label htmlFor="rating">Rating</label>
                                     <select
                                     name="rating"
@@ -150,7 +186,7 @@ function ProductScreen(props){
                                     <option value="4">4- Very Good</option>
                                     <option value="5">5- Excelent</option>
                                     </select>
-                                </li>
+                                </li> */}
                                 <li>
                                     <label htmlFor="comment">Comment</label>
                                     <textarea
