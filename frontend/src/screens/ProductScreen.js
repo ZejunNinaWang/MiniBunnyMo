@@ -83,7 +83,7 @@ function ProductScreen(props){
             <div className="back-to-result">
                 <Link to="/">Back to results</Link>
             </div>
-            {loading ? <div>Loading...</div> :
+            {loading ? <div className="loading"><i className="fa fa-spinner fa-spin"></i></div> :
             error ? <div>{error}</div> : 
                 (
                     <>

@@ -108,7 +108,7 @@ function HomeScreen(props){
                 </div>
             </div>
             {
-                loading ? <div>loading...</div> :
+                loading ? <div className="loading"><i className="fa fa-spinner fa-spin"></i></div> :
                 error ? <div>{error}</div> :
                 <div>
                 {/* <p>HomeScreen</p> */}

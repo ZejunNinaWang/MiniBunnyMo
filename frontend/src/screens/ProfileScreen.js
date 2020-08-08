@@ -55,7 +55,8 @@ function ProfileScreen(props){
                     <Link to="/avatar" title="Change Avatar">
                         <img src={"/api/avatars/"+userInfo.avatar} alt="Avatar" className="avatar-icon"></img>
                     </Link>}</li>
-                    {loading && <div>Loading</div>}
+                    {/* {loading && <div>Loading</div>} */}
+                    {loading && <div className="loading"><i className="fa fa-spinner fa-spin"></i></div>}
                     {error && <div style={{color: "green"}}>{error}</div>}
                     {/*TODO: fix issue: the following text should disappear after switch screen,for now it only disappear when refresh page */}
                     {userUpdateSuccess && <div style={{color: "green"}}>Profile Saved Successfully.</div>}
@@ -86,7 +87,7 @@ function ProfileScreen(props){
         <div className="profile-orders content-margined">
             <div><h3>Your Orders:</h3></div>
         {   
-            loadingOrders ? <div>Loading...</div> :
+            loadingOrders ? <div className="loading"><i className="fa fa-spinner fa-spin"></i></div> :
             errorOrders ? <div>{errorOrders} </div> :
             orders.length !== 0 ?
             <div className="order-list">
@@ -104,7 +105,7 @@ function ProfileScreen(props){
                     {orders.map(order => <tr key={order._id}>
                     <td>{order._id}</td>
                     <td>{order.createdAt}</td>
-                    <td>{order.totalPrice}</td>
+                    <td>${order.totalPrice}</td>
                     <td>{order.isPaid ? 'Paid':'Not Paid'}</td>
                     <td>
                         <Link to={"/order/" + order._id}>DETAILS</Link>

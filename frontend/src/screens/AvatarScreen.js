@@ -235,8 +235,8 @@ function AvatarScreen(props) {
             const overlayValues = getOverlayValues(detection.landmarks)
     
             const overlay = document.createElement("img")
-            overlay.src = '/masks/1.PNG'
-            overlay.alt = "mask overlay."
+            overlay.src = '../api/image/a492986734b1bf8b3999753af44d50ac.PNG'
+            overlay.alt = "mask overlay"
             const avatarUpload = document.getElementById("avatar-upload")
             const Left = videoLi.offsetLeft + overlayValues.leftOffset * scale
             const Top = videoLi.offsetTop + overlayValues.topOffset * scale

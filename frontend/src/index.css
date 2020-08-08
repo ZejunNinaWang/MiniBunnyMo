@@ -2,6 +2,8 @@
   --lightPink: #F7E1D7;
   --lightGreen: #a3b9a4;
   --lightGreen2: #becfbf;
+  --grey: #DEDBD2;
+  --lightGrey: #ecebe6;
   --darkGreen: #4A5759;
 }
 html{
@@ -27,6 +29,11 @@ body{
   height: 100%;
 }
 
+.loading{
+  color: var(--lightGreen);
+  margin: 0 auto;
+  text-align: center;
+}
 .grid-container{
   display: grid;
   height: 100%;
@@ -282,6 +289,7 @@ a > .like > span{
 
 .details-image{
   flex: 2 1 20rem;
+  max-width: 60rem;
 }
 .details-image img{
   /* max-width: 60rem; */
@@ -340,14 +348,18 @@ a > .like > span{
 }
 
 .button.secondary{
-  background-color: #f0f0f0;
+  /* background-color: #f0f0f0; */
+  background-color: var(--grey);
   border: 0.1rem #f0f0f0 solid;
   color: var(--darkGreen);
 }
 .button.secondary:hover{
-  background-color: #f8f8f8;
+  /* background-color: #f8f8f8; */
+  background-color: var(--lightGrey);
 }
-
+.register-li > a{
+  font-weight: lighter;
+}
 .back-to-result a{
   color: var(--darkGreen);
 }
@@ -477,7 +489,8 @@ a > .like > span{
 }
 
 .product-list tbody tr:nth-child(odd){
-  background-color: #f0f0f0;
+  /* background-color: #f0f0f0; */
+  background-color: var(--lightGrey);
 }
 
 /* Checkout Steps*/
@@ -609,7 +622,12 @@ a > .like > span{
 }
 
 .order-list tbody tr:nth-child(odd){
-  background-color: #f0f0f0;
+  /* background-color: #f0f0f0; */
+  background-color: var(--lightGrey);
+}
+
+.order-list a.button.secondary{
+  font-weight: lighter;
 }
 
 /*Admin*/

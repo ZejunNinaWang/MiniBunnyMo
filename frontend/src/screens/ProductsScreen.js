@@ -95,6 +95,10 @@ function ProductsScreen(props){
         dispatch(deleteProduct(productId));
     }
 
+    const detailHandler = (productId) => {
+        props.history.push('/product/'+productId);
+    }
+
     const uploadFileHandler = (e) => {
         const file = e.target.files[0]; //access the single file
 
@@ -131,7 +135,8 @@ function ProductsScreen(props){
             <form onSubmit={submitHandler}>
                 <ul className="form-container">
                     <li><h2>Add Your Pet</h2></li>
-                    {loadingSave && <div>Loading</div>}
+                    {/* {loadingSave && <div>Loading</div>} */}
+                    {loadingSave && <div className="loading"><i className="fa fa-spinner fa-spin"></i></div>}
                     {errorSave && <div className="error">{errorSave}</div>}
                     {inCompleteInfo && <div className="error">Please complete product infomation</div>}
                     <li>
@@ -159,7 +164,17 @@ function ProductsScreen(props){
                         ></input> */}
                         {image != '' ? image:''}
                         <input type="file" onChange={uploadFileHandler}></input>
-                        {uploading && <div>Uploading...</div>}
+                        {uploading && <div className="loading"><i className="fa fa-spinner fa-spin"></i></div>}
+                    </li>
+                    <li>
+                        <label htmlFor="countInStock">Count in stock</label>
+                        <input
+                        type="text"
+                        name="countInStock"
+                        value={countInStock}
+                        id="countInStock"
+                        onChange={(e) => setCountInStock(e.target.value)}
+                        ></input>
                     </li>
                     {/* <li>
                         <label htmlFor="country">Country</label>
@@ -191,16 +206,7 @@ function ProductsScreen(props){
                             <option value="female">female</option>
                         </select>
                     </li>
-                    <li>
-                        <label htmlFor="countInStock">Count in stock</label>
-                        <input
-                        type="text"
-                        name="countInStock"
-                        value={countInStock}
-                        id="countInStock"
-                        onChange={(e) => setCountInStock(e.target.value)}
-                        ></input>
-                    </li>
+                    
                     {/* <li>
                         <label htmlFor="name">Category</label>
                         <input
@@ -233,10 +239,10 @@ function ProductsScreen(props){
                     </li>
                     <li>
                     <button 
-                    type="submit" 
-                    className="button"
-                    disabled={!name || !image || !country || !category || !description}
-                    >{id? "Edit" : "Create"}</button>
+                        type="submit" 
+                        className="button"
+                        disabled={!name || !image || !country || !category || !description}
+                        >{id? "Edit" : "Create"}</button>
                     </li>
                     <li>
                         <button
@@ -279,6 +285,8 @@ function ProductsScreen(props){
                                     <button className="button secondary" onClick={() => openModal(product)}>Edit</button>
                                     {' '}
                                     <button className="button secondary" onClick={() => deleteHandler(product._id)}>Delete</button>
+                                    {/* {' '} */}
+                                    {/* <button className="button secondary" onClick={() => detailHandler(product._id)}>Details</button> */}
                                 </td>
                             </tr>
                         ))}
