@@ -27,7 +27,6 @@ exports.getToken = getToken;
 
 var isAuth = function isAuth(req, res, next) {
   var token = req.headers.authorization; //'Bearer ' + userInfo.token
-
   if (token) {
     var onlyToken = token.slice(7, token.length);
 
@@ -52,7 +51,6 @@ var isAuth = function isAuth(req, res, next) {
 exports.isAuth = isAuth;
 
 var isAdmin = function isAdmin(req, res, next) {
-  console.log(req.user);
 
   if (req.user && req.user.isAdmin) {
     return next();

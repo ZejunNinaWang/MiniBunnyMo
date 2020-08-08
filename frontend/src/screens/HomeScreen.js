@@ -4,6 +4,8 @@ import { Link } from 'react-router-dom';
 import {useSelector, useDispatch} from 'react-redux';
 import { listProducts } from '../actions/productActions';
 import Rating from '../components/Rating';
+import Like from '../components/Like';
+import { likeProduct, removeLikeProduct } from '../actions/likeActions';
 
 function HomeScreen(props){
     const category = props.match.params.id ? props.match.params.id : '';
@@ -13,16 +15,17 @@ function HomeScreen(props){
     const productList = useSelector(state => state.productList); // productList is set to the state defined from the productList reducer
     const {products, loading, error} = productList;
 
+    const likes = useSelector(state => state.likes);
+    const {likesByProductId} = likes;
+
     const dispatch = useDispatch();
 
     //didMount
     useEffect(() => {
         // redux can guarantee that the dispatch function will not change between renders.
         // so we don't need to wrap it with useCallback for now.
-        console.log("category is ", category);
-        console.log("searchKeyword is ", searchKeyword);
-        console.log("sortOrder is ", sortOrder);
         dispatch(listProducts(category, searchKeyword, sortOrder));
+        console.log("likesByProductId is ", likesByProductId);
         return () => {
             //clean up
         };
@@ -32,6 +35,20 @@ function HomeScreen(props){
         e.preventDefault();
         dispatch(listProducts(category, searchKeyword, sortOrder));
       };
+
+    const like = (productId) => {
+        console.log("like product: ", productId);
+        if(likesByProductId[productId] === true){
+            //if already like, then remove like
+            console.log("remove like");
+            dispatch(removeLikeProduct(productId));
+        } else {
+            //like
+            dispatch(likeProduct(productId));
+        }
+        
+
+    }
 
 
     // const sortHandler = (e) => {
@@ -89,7 +106,11 @@ function HomeScreen(props){
                                     <div className="product-price">${product.price}</div>
                                     {/* <div className="product-rating">{product.rating} Carrots ({product.numReviews} Reviews)</div> */}
                                     <div className="product-rating">
-                                        <Rating value={product.rating} text={product.numReviews + ' reviews'}/>
+                                        {/* <Rating value={product.rating} text={product.numReviews + ' reviews'}/> */}
+                                        <Link onClick={() => like(product._id)}>
+                                        <Like like={likesByProductId[product._id]}/>
+                                        </Link>
+                                        
                                     </div>
                                     
                                 </div>

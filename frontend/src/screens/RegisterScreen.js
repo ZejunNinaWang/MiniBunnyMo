@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { register } from '../actions/userActions';
+import RegisterSteps from '../components/RegisterSteps';
 
 
 function RegisterScreen(props){
@@ -20,8 +21,7 @@ function RegisterScreen(props){
 
     useEffect(() => {
         if(userInfo && userInfo.name){
-            props.history.push(redirect);
-            //props.history.push('signin');
+            window.location.href = "/avatar";
         }
         return () => {
 
@@ -33,7 +33,10 @@ function RegisterScreen(props){
         dispatch(register(name,email, password));
     }
 
-    return(<div className='form'>
+    return(
+        <div>
+            <RegisterSteps></RegisterSteps>
+            <div className='form'>
             <form onSubmit={submitHandler}>
                 <ul className="form-container">
                     <li><h2>Create Account</h2></li>
@@ -65,6 +68,7 @@ function RegisterScreen(props){
                 </ul>
             </form>
            </div>
+        </div>
     )
 }
 

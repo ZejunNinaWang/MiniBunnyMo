@@ -12,6 +12,7 @@ import userRoute from './routes/userRoute';
 import productRoute from './routes/productRoute';
 import orderRoute from './routes/orderRoute';
 import uploadRoute from './routes/uploadRoute';
+import likeRoute from './routes/likeRoute';
 
 const mongodbUrl = config.MONGODB_URL;
 let gfs;//For product images
@@ -71,6 +72,7 @@ app.use("/api/users", userRoute);
 app.use("/api/products", productRoute);
 app.use('/api/orders', orderRoute);
 app.use("/api/uploads", uploadRoute);
+app.use('/api/likes', likeRoute);
 
 app.get('/api/image/:filename', (req, res) => {
   gfs.find({ filename: req.params.filename }).toArray((err, files) => {

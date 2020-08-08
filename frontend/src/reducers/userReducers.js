@@ -53,7 +53,7 @@ function userUpdateReducer(state={}, action){
     }
 }
 
-function userAvatarSaveReducer(state = {}, action) {
+function userAvatarSaveReducer(state={}, action) {
     switch(action.type){
         case USER_AVATAR_SAVE_REQUEST:
             return {loading: true};

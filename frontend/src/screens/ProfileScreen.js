@@ -8,7 +8,7 @@ function ProfileScreen(props){
     const [name, setName] = useState('');
     const [password, setPassword] = useState('');
     const [email, setEmail] = useState('');
-
+    
     const userUpdate = useSelector(state => state.userUpdate);
     const {loading, success: userUpdateSuccess , error} = userUpdate;
 
@@ -38,12 +38,9 @@ function ProfileScreen(props){
             setEmail(userInfo.email);
             setName(userInfo.name);
             setPassword(userInfo.password);
-            
           }
-
         dispatch(listMyOrders());
         return () => {
-
         };
     }, [userSignin]);
 
@@ -52,7 +49,12 @@ function ProfileScreen(props){
         <div className='form'>
             <form onSubmit={submitHandler}>
                 <ul className="form-container">
-                    <li><h2>User Profile</h2></li>
+                    <li>{!userInfo.avatar?
+                    <Link to="/avatar" title="Create Avatar"><h2>User Profile</h2></Link>
+                    :
+                    <Link to="/avatar" title="Change Avatar">
+                        <img src={"/api/avatars/"+userInfo.avatar} alt="Avatar" className="avatar-icon"></img>
+                    </Link>}</li>
                     {loading && <div>Loading</div>}
                     {error && <div style={{color: "green"}}>{error}</div>}
                     {/*TODO: fix issue: the following text should disappear after switch screen,for now it only disappear when refresh page */}

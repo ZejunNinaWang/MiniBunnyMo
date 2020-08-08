@@ -1,6 +1,7 @@
 import { PRODUCT_LIST_REQUEST, PRODUCT_LIST_SUCCESS, PRODUCT_LIST_FAIL, PRODUCT_DETAILS_REQUEST, PRODUCT_DETAILS_SUCCESS, PRODUCT_DETAILS_FAIL, PRODUCT_SAVE_REQUEST, PRODUCT_SAVE_SUCCESS, PRODUCT_SAVE_FAIL, PRODUCT_DELETE_REQUEST, PRODUCT_DELETE_SUCCESS, PRODUCT_DELETE_FAIL, PRODUCT_REVIEW_SAVE_REQUEST, PRODUCT_REVIEW_SAVE_SUCCESS, PRODUCT_REVIEW_SAVE_FAIL } from "../constants/productConstants"
 import axios from 'axios';
-import Axios from "axios";
+import { ALL_LIKES } from "../constants/likeConstants";
+import { getAllLikes } from "./likeActions";
 
 const listProducts = (
     category = '',
@@ -19,6 +20,10 @@ const listProducts = (
             sortOrder
         );
         dispatch({type: PRODUCT_LIST_SUCCESS, payload: data});
+        console.log("before getAllLikes");
+        //get all likes after getting products
+        dispatch(getAllLikes(data));
+        
     }
     catch(error)
     {
@@ -45,7 +50,7 @@ const saveProduct = (product) => async (dispatch, getState) => {
         const {userSignin: {userInfo}} = getState();
 
         if(!product._id){
-            const {data} = await Axios.post('/api/products', product, {
+            const {data} = await axios.post('/api/products', product, {
                 headers: {
                     'Authorization': 'Bearer ' + userInfo.token
                 }
@@ -53,7 +58,7 @@ const saveProduct = (product) => async (dispatch, getState) => {
             dispatch({type: PRODUCT_SAVE_SUCCESS, payload: data});
         }
         else{
-            const {data} = await Axios.put('/api/products/'+product._id, product, {
+            const {data} = await axios.put('/api/products/'+product._id, product, {
                 headers: {
                     'Authorization': 'Bearer ' + userInfo.token
                 }

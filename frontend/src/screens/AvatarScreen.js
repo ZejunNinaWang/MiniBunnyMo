@@ -3,6 +3,8 @@ import * as faceapi from 'face-api.js';
 import axios from 'axios';
 import { useSelector, useDispatch } from 'react-redux';
 import { saveAvatar } from '../actions/userActions';
+import RegisterSteps from '../components/RegisterSteps';
+import { USER_AVATAR_SAVE_RESET } from '../constants/userConstants';
 
 
 
@@ -65,18 +67,13 @@ function AvatarScreen(props) {
   }
   
   useEffect(() => { 
-
       if(userAvatarSaveSuccess){
+        dispatch({type: USER_AVATAR_SAVE_RESET});
         props.history.push("/");
       }
-
-
-      
-      
       return () => {
-        
       };
-  }, [userAvatarSaveSuccess]);
+  }, [userAvatarSave]);
 
   useEffect(() => { 
     let isMounted = true;  // note this flag denote mount status
@@ -84,6 +81,8 @@ function AvatarScreen(props) {
     if(!userInfo || !userInfo.name){
       props.history.push('register');
     }
+
+    console.log("userInfo.avatar is ", userInfo.avatar)
 
     if(isMounted) {
       loadModels();
@@ -309,7 +308,6 @@ function AvatarScreen(props) {
     .then(blob => {
       const file = new File([blob], 'avatar.png', blob)
       bodyFormData.append('image', file); 
-      // setUploading(true);
       axios.post('/api/uploads/avatars', bodyFormData, {
           headers: {
               'Content-Type': 'multipart/form-data',
@@ -322,46 +320,89 @@ function AvatarScreen(props) {
     }).catch(err => {
       console.log(err)
     })
-
-    
   }
 
+  const selectFromPC = (e) => {
+    console.log("select from pc");
+    const file = e.target.files[0]; //access the single file
+
+    const bodyFormData = new FormData();
+    bodyFormData.append('image', file); //so we can send ajax request 
+    axios.post('/api/uploads/avatars', bodyFormData, {
+      headers: {
+          'Content-Type': 'multipart/form-data',
+      },
+    }).then(response => {
+        dispatch(saveAvatar(response.data.file.filename));
+    }).catch(err => {
+        console.log(err);
+    });
+  }
+
+  const skip = () => {
+    // props.history.push("/");
+    window.location.href = "/";
+  }
+
+
   return (
-    <div className="avatar content-margined">
-      <ul id="avatar-upload" className="avatar-upload">
-        <li id="video-li">
-        <video id="video" className="video" ref={videoRef} autoPlay muted></video>
-        </li>
-        <li className="button-selfie-li">
-        <button 
-          style={{display: !photoTakenRef.current? '':'none'}}
-          disabled={!modelsLoaded} 
-          onClick={isWebCamOn?takePhoto:startVideo} 
-          className="button selfie"
-          ref={btnTakePhotoRef}>
-          {isWebCamOn?"Take Photo":"Turn on Camera"}
-        </button>
-        <div style={{display: photoTakenRef.current? '':'none'}}>
-          <button
-          className="button"
-          onClick={retake}>
-            Retake
-          </button>
-          <button
-          className="button"
-          onClick={setAsProfile}>
-            Set As Profile
-          </button>
-        </div>
+    <div>
+      <RegisterSteps step1></RegisterSteps>
+
+
+      <div className="avatar content-margined">
+        <ul id="avatar-upload" className="avatar-upload">
+          <li id="video-li">
+          <video id="video" className="video" ref={videoRef} autoPlay muted></video>
+          </li>
+          <li className="button-selfie-li">
+            <div style={{display: !photoTakenRef.current? '':'none'}}>
+              <label 
+              className="avatar-file-upload"
+              style={{display: !isWebCamOn? '':'none'}}
+              onChange={selectFromPC}>
+              Select from PC
+              <input className="AvatarInput" type="file" onChange={selectFromPC}></input>
+              </label>
+
+              <button 
+              disabled={!modelsLoaded} 
+              onClick={isWebCamOn?takePhoto:startVideo} 
+              className="button selfie"
+              ref={btnTakePhotoRef}>
+              {isWebCamOn?"Take Photo":"Turn on Camera"}
+            </button>
+
+            </div>
+
+            <div style={{display: photoTakenRef.current? '':'none'}}>
+              <button
+              className="button"
+              onClick={retake}>
+                Retake
+              </button>
+              <button
+              className="button"
+              onClick={setAsProfile}>
+                Set As Profile
+              </button>
+            </div>
+          </li>
+          <li className="skip-li">
+            <div className="skip-div">
+              <button className="button secondary skip" onClick={skip}>
+                Skip
+              </button>
+            </div>
+          </li>
+          
+        </ul>
+
         
+      </div>
 
-
-        </li>
-        
-      </ul>
-
-      
     </div>
+    
   )
   
 }

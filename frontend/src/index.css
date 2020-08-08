@@ -174,6 +174,20 @@ a > .rating > span:last-child{
 
 } */
 
+/*Like*/
+.like{
+  text-align: right;
+}
+.like span{
+  color: pink;
+  font-size: 1.8rem;
+  margin: 0.1rem;
+}
+a > .like > span{
+  color: pink;
+}
+
+
 
 /*Sidebar*/
 .brand button{
@@ -287,7 +301,7 @@ a > .rating > span:last-child{
   flex-direction: column;
 }
 
-.button{
+.button,.avatar-file-upload{
   padding: 1rem;
   border: 0.1rem #808080 solid;
   border-radius: 0.5rem;
@@ -296,7 +310,7 @@ a > .rating > span:last-child{
   text-align: center;
 }
 
-.button:hover{
+.button:hover,.avatar-file-upload:hover{
   border: 0.1rem #404040 solid;
 }
 
@@ -465,6 +479,25 @@ a > .rating > span:last-child{
   
 }
 
+/*Register Steps*/
+.register-steps {
+  display: flex;
+  justify-content: space-between;
+  width: 40rem;
+  margin: 1rem auto;
+}
+.register-steps > div {
+  border-top: 0.3rem #c0c0c0 solid;
+  color: #c0c0c0;
+  flex: 1 1;
+  padding-top: 1rem;
+  font-weight: bold;
+}
+.register-steps > div.active {
+  border-top: 0.3rem rgb(209, 125, 139) solid;
+  color: rgb(209, 125, 139);
+}
+
 /*Place Order*/
 .placeorder{
   display: flex;
@@ -516,6 +549,10 @@ a > .rating > span:last-child{
 
 .profile-info{
   flex: 1 1 20rem;
+}
+
+.profile-info li:first-child{
+  margin: 1rem auto;
 }
 
 .profile-info button:focus{
@@ -599,6 +636,7 @@ a > .rating > span:last-child{
   width: 35px;
   height: 35px;
   border-radius: 50%;
+  margin: 0 auto;
 }
 canvas {
   position: absolute;
@@ -642,12 +680,24 @@ canvas {
   width: 39.5rem;
   display: flex;
 }
-.button-selfie-li div .button{
+.button-selfie-li div .button, label{
   flex: 0.5;
+}
+.skip-li{
+  display: flex;
+}
+.skip-div{
+  margin: 0 auto;
+  width: 39.5rem;
+  text-align: right;
+}
+.button.secondary.skip{
+  color: #808080;
+  margin-top: 1rem;
 }
 .button.selfie{
   margin: 0 auto;
-  width: 39.5rem;
+  /* width: 39.5rem; */
 }
 
 .button.selfie:focus {
@@ -659,11 +709,19 @@ canvas {
   background-color: rgb(209, 125, 139);
 }
 
+.AvatarInput{
+  display: none;
+}
+
+.avatar-file-upload{
+  font-size: 1.4rem;
+}
 
 
 .avatar-generated{
   flex: 1 1 30rem;
 }
+
 
 
 

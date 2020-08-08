@@ -1,11 +1,10 @@
 import express from 'express';
 import Product from '../models/productModel';
-import { getToken, isAuth } from '../util';
+import { isAuth, isAdmin } from '../util';
 
 const productRoute = express.Router();
 
 productRoute.get('/', async (req, res) => {
-
   const category = req.query.category ? { category: req.query.category } : {};
   const searchKeyword = req.query.searchKeyword
     ? {
@@ -21,7 +20,6 @@ productRoute.get('/', async (req, res) => {
       : { price: -1 } //descending
     : { _id: -1 };
   const products = await Product.find({ ...category, ...searchKeyword }).sort(sortOrder);
- 
   res.send(products);
 
 });
@@ -35,7 +33,7 @@ productRoute.get('/:id', async (req, res) => {
   }
 });
 
-productRoute.post("/", async (req, res) => {
+productRoute.post("/", isAuth, isAdmin, async (req, res) => {
   try {
     const product = new Product({
       name: req.body.name,
@@ -63,7 +61,7 @@ productRoute.post("/", async (req, res) => {
 })
 
 
-productRoute.put("/:id", async (req, res) => {
+productRoute.put("/:id", isAuth, isAdmin, async (req, res) => {
   try {
     const productId = req.params.id;
     const product = await Product.findById(productId);
@@ -91,7 +89,7 @@ productRoute.put("/:id", async (req, res) => {
 })
 
 
-productRoute.delete("/:id", async (req, res) => {
+productRoute.delete("/:id", isAuth, isAdmin, async (req, res) => {
   try {
     const deletedProduct = await Product.findById(req.params.id);
     if(deletedProduct){

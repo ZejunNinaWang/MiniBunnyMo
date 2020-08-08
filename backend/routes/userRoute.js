@@ -69,17 +69,13 @@ userRoute.post("/signin", async (req, res) => {
 
   userRoute.post("/register", async (req, res) => {
       try {
-        console.log("aaa");
         const user = new User({
             name: req.body.name,
             email: req.body.email,
             password: req.body.password
         });
-        console.log("bbb");
         let newUser = await user.save();
-        console.log("ccc");
         if (newUser) {
-          console.log('new name is ', newUser.name);
           res.send({
             _id: newUser.id,
             name: newUser.name,
