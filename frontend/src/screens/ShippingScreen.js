@@ -28,11 +28,9 @@ function ShippingScreen(props){
                 setPostalCode(shipping.postalCode);
             if(shipping.country)
                 setCountry(shipping.country);
-            // console.log("address is ", address);
         }
 
         //if save product success, close product form
-        //console.log("address is ", address);
         return () => {
 
         };

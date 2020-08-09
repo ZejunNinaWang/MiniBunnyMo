@@ -8,36 +8,23 @@ function PlaceOrderScreen(props) {
 
   const [count, setCount] = useState(0);
 
-  console.log('Enterted PlaceOrderScreen');
-
   const cart = useSelector(state => state.cart);
   const orderCreate = useSelector(state => state.orderCreate);
 
-  //const orderCreate = useSelector(state => state.orderCreate);
-  //const { loading, success, error, order } = orderCreate;
-
   const { cartItems, shipping, payment } = cart;
   const {loading, order, error, success} = orderCreate;
-  console.log('success is ', success);
-//   console.log("cartItems has ", cartItems.length);
-//   console.log("shipping is ", shipping);
-//   console.log("payment is ", payment);
 
   if (!shipping) {
-    //   console.log("!shipping");
     props.history.push("shipping");
   } 
   if (shipping && !shipping.address) {
-    // console.log("!shipping.address");
   props.history.push("shipping");
 } 
   if (!payment) {
-    // console.log("!payment");
     props.history.push("payment");
   }
 
   if (payment && !payment.paymentMethod) {
-    // console.log("!payment.paymentMethod");
     props.history.push("payment");
   }
   const itemsPrice = cartItems.reduce((a, c) => a + c.price * c.qty, 0);
@@ -48,7 +35,6 @@ function PlaceOrderScreen(props) {
   const dispatch = useDispatch();
 
   const placeOrderHandler = () => {
-    console.log('in placeOrderHandler');
     // create an order
     dispatch(createOrder({
       orderItems: cartItems, shipping, payment, itemsPrice, shippingPrice,
@@ -60,7 +46,6 @@ function PlaceOrderScreen(props) {
       if(count){
         //if order created success, redirect to order detail page
         if (success) {
-          console.log("Order created successfully, ", order);
           props.history.push("/order/" + order._id);
         }
       }

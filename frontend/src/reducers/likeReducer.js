@@ -7,7 +7,7 @@ function likesByProductIdReducer(state={likesByProductId:{}}, action){
         case ALL_LIKES:
             const {products, likedProducts} = action;
             //if dict not exist, create it
-            if(Object.keys(state.likesByProductId).length === 0){
+            if(Object.keys(state.likesByProductId).length === 0 && products.length > 0){
                 //create dict of all product id as keys, set value to false
                 const likesDict = {};
                 products.forEach(product => {

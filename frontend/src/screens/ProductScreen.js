@@ -6,7 +6,7 @@ import Rating from '../components/Rating';
 import { PRODUCT_REVIEW_SAVE_RESET } from '../constants/productConstants';
 import { productReviewSaveReducer } from '../reducers/productReducers';
 import Like from '../components/Like';
-import { removeLikeProduct, likeProduct } from '../actions/likeActions';
+import { removeLikeProduct, likeProduct, getAllLikes } from '../actions/likeActions';
 
 
 function ProductScreen(props){
@@ -47,6 +47,10 @@ function ProductScreen(props){
         };
     }, [productReviewSaveSuccess]);
 
+    useEffect(() => {
+        dispatch(getAllLikes());
+    }, [])
+
     const handleAddToCart = () => {
         //redirect
         props.history.push("/cart/" + props.match.params.id + "?qty=" + qty);
@@ -65,10 +69,8 @@ function ProductScreen(props){
       };
 
       const like = (productId) => {
-        console.log("like product: ", productId);
         if(likesByProductId[productId] === true){
             //if already like, then remove like
-            console.log("remove like");
             dispatch(removeLikeProduct(productId));
         } else {
             //like

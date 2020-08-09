@@ -3,15 +3,13 @@ import { ALL_LIKES, ADD_LIKE, REMOVE_LIKE, RESET_LIKE } from '../constants/likeC
 import { useSelector } from 'react-redux';
 import store from '../store';
 
-const getAllLikes = (products) => async (dispatch, getState) => {
-    console.log('in getAllLikes')
+const getAllLikes = (products = []) => async (dispatch, getState) => {
     const {userSignin: {userInfo}, likes} = getState();
     
     const {likesByProductId} = likes;
 
     //if not cached, query DB
     if(Object.keys(likesByProductId).length === 0){
-        console.log("Get all likes")
         try {
             //if no user id, dispatch with products
             if(!userInfo._id){
@@ -19,8 +17,6 @@ const getAllLikes = (products) => async (dispatch, getState) => {
             //if user id, query backend like table with userid, get a list of productId as likedProducts
             //dispatch action with products and likedProducts
             } else {
-                console.log('1')
-                console.log('userInfo.token is ', userInfo.token);
                 //get a list of liked products of this user
                 const {data} = await Axios.get(
                     '/api/likes/'+userInfo._id, {
@@ -28,7 +24,6 @@ const getAllLikes = (products) => async (dispatch, getState) => {
                             'Authorization': 'Bearer ' + userInfo.token
                         }
                 });
-                console.log('likedProducts are ', data)
         
                 dispatch({type: ALL_LIKES, likedProducts:data, products});
             }
@@ -54,7 +49,6 @@ const likeProduct = (productId) => async (dispatch, getState) => {
             });
             dispatch({type: ADD_LIKE, likeProductId:productId});
         } else {
-            console.log("no user id")
             //if no user id, no writing to DB
             dispatch({type: ADD_LIKE, likeProductId:productId});
         }

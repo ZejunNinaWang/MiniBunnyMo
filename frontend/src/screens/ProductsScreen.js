@@ -1,9 +1,11 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { signin } from '../actions/userActions';
 import { saveProduct, listProducts, deleteProduct, listMyProducts } from '../actions/productActions';
 import axios from 'axios';
+import * as mobilenet from "@tensorflow-models/mobilenet";
+import { set } from 'js-cookie';
 
 
 
@@ -21,6 +23,12 @@ function ProductsScreen(props){
     const [countInStock, setCountInStock] = useState(0);
     const [description, setDescription] = useState('');
     const [uploading, setUploading] = useState(false);
+
+    const [fileUploadError, setFileUploadError] = useState(null);
+    const [mobileNetModel, setMobileNetModel] = useState(null);
+    const [verifying, setVerifying] = useState(false);
+    const imageRef = useRef();
+    const [imageURL, setImageURL] = useState(null);
     
     const [inCompleteInfo, setInCompleteInfo] = useState(false);
 
@@ -49,6 +57,22 @@ function ProductsScreen(props){
         };
     }, [successSave, successDelete]);
 
+    //load mobilenet model when page loads
+    useEffect(() => {
+        const loadMobileNetModel = async () => {
+            const model = await mobilenet.load();
+            setMobileNetModel(model);
+        }
+        loadMobileNetModel();
+        
+    }, [])
+
+    useEffect(() => {
+        setImageURL(null);
+        setFileUploadError(null);
+
+    }, [modelVisible])
+
     //open the product form
     //if user click create button: fields will be empty when open
     //if user click edit button: fields will be filled when open
@@ -67,14 +91,12 @@ function ProductsScreen(props){
 
     const submitHandler = (e) => {
         e.preventDefault();
-        if(!name || !image || !country || !category || !description){
-            console.log("Incomplete product infomation");
+        if(!name || !image || !country || !category || !description || !gender || !price || !countInStock){
             setInCompleteInfo(true);
 
         }
         else{
             setInCompleteInfo(false);
-            console.log("in submit: ", name)
             dispatch(saveProduct({
                 _id: id,
                 name,
@@ -99,25 +121,64 @@ function ProductsScreen(props){
         props.history.push('/product/'+productId);
     }
 
-    const uploadFileHandler = (e) => {
+    const uploadFile = async (file) => {
+        if(imageRef.current){
+            setVerifying(true);
+            const results = await mobileNetModel.classify(imageRef.current);
+            let imageValidated = false;
+            results.forEach(result => {
+                if(result.className.includes("rabbit") || result.className.includes("cat") || result.className.includes("dog")){
+                    imageValidated = true || imageValidated;
+                }
+            });
+            setVerifying(false);
+
+            // if image is a animal, upload image to DB
+            if(imageValidated){
+                const bodyFormData = new FormData();
+                bodyFormData.append('image', file); //so we can send ajax request 
+                setUploading(true);
+                axios.post('/api/uploads', bodyFormData, {
+                    headers: {
+                        'Content-Type': 'multipart/form-data',
+                    },
+                }).then(response => {
+                    // console.log("upload success ", response.data.file.filename);
+                    setImage(response.data.file.filename);
+                    setUploading(false);
+                }).catch(err => {
+                    setFileUploadError('Failed to upload image to server.' + err);
+                    setUploading(false);
+                });
+
+            }
+            else{
+                //image is not animal
+                setFileUploadError("Animal not detected. Please try again.");
+            }
+        }
+    }
+
+    const validateFileHandler = async (e) => {
+        setFileUploadError(null);
+        setImageURL(null);
+        if(e.target.files.length === 0)
+            return;
+            
         const file = e.target.files[0]; //access the single file
+        
+        //check file type
+        const fileType = file.type;
+        if(fileType !== 'image/png' && fileType !== 'image/jpeg'){
+            setFileUploadError("Please upload a png or jpg file.");
+            return;
+        }
 
-        const bodyFormData = new FormData();
-        bodyFormData.append('image', file); //so we can send ajax request 
-        setUploading(true);
-        axios.post('/api/uploads', bodyFormData, {
-            headers: {
-                'Content-Type': 'multipart/form-data',
-            },
-        }).then(response => {
-            console.log("upload success ", response.data.file.filename);
-            setImage(response.data.file.filename);
-            setUploading(false);
-        }).catch(err => {
-            console.log(err);
-            setUploading(false);
-        });
-
+        //validate the image it's an animal before uploading to DB
+        const url = URL.createObjectURL(file);
+        setImageURL(url);
+        uploadFile(file);
+        
     }
 
     return(
@@ -128,14 +189,11 @@ function ProductsScreen(props){
             <button className="button"onClick={() => openModal({})}>Add Your Pet</button>
         </div>
         
-
-        
         {modelVisible &&
         <div className='form'>
             <form onSubmit={submitHandler}>
                 <ul className="form-container">
                     <li><h2>Add Your Pet</h2></li>
-                    {/* {loadingSave && <div>Loading</div>} */}
                     {loadingSave && <div className="loading"><i className="fa fa-spinner fa-spin"></i></div>}
                     {errorSave && <div className="error">{errorSave}</div>}
                     {inCompleteInfo && <div className="error">Please complete product infomation</div>}
@@ -155,16 +213,15 @@ function ProductsScreen(props){
                     </li>
                     <li>
                         <label htmlFor="image">Image</label>
-                        {/* <input
-                        type="text"
-                        name="image"
-                        value={image}
-                        id="image"
-                        onChange={(e) => setImage(e.target.value)}
-                        ></input> */}
-                        {image != '' ? image:''}
-                        <input type="file" onChange={uploadFileHandler}></input>
+                        {image ? <div className="loading-text">Image verified and uploaded as ${image}</div> : ''}
+                        <input type="file" onChange={validateFileHandler} ></input>
                         {uploading && <div className="loading"><i className="fa fa-spinner fa-spin"></i></div>}
+                        {fileUploadError && <div className="error">{fileUploadError}</div>}
+                        {verifying && <div className="loading">Verifying image <i className="fa fa-spinner fa-spin"></i></div>}
+                        
+                        <img id='upload-image' src={imageURL} alt="upload-preview" ref={imageRef} style={{
+                        width: '10rem', height: 'auto', padding: '0.5rem'}}/>
+                        
                     </li>
                     <li>
                         <label htmlFor="countInStock">Count in stock</label>
@@ -176,16 +233,6 @@ function ProductsScreen(props){
                         onChange={(e) => setCountInStock(e.target.value)}
                         ></input>
                     </li>
-                    {/* <li>
-                        <label htmlFor="country">Country</label>
-                        <input
-                        type="text"
-                        name="country"
-                        value={country}
-                        id="country"
-                        onChange={(e) => setCountry(e.target.value)}
-                        ></input>
-                    </li> */}
                     <li>
                         <label htmlFor="country">Country</label>
                         <select name="country" 
@@ -207,16 +254,6 @@ function ProductsScreen(props){
                         </select>
                     </li>
                     
-                    {/* <li>
-                        <label htmlFor="name">Category</label>
-                        <input
-                        type="text"
-                        name="category"
-                        value={category}
-                        id="category"
-                        onChange={(e) => setCategory(e.target.value)}
-                        ></input>
-                    </li> */}
                     <li>
                         <label htmlFor="category">Category</label>
                         <select name="category" 
@@ -226,6 +263,8 @@ function ProductsScreen(props){
                             <option value="Cashmere Lop">Cashmere Lop</option>
                             <option value="American Fuzzy Lop">American Fuzzy Lop</option>
                             <option value="French Lop">French Lop</option>
+                            <option value="Dog">Dog</option>
+                            <option value="Cat">Cat</option>
                         </select>
                     </li>
                     <li>
@@ -241,7 +280,7 @@ function ProductsScreen(props){
                     <button 
                         type="submit" 
                         className="button"
-                        disabled={!name || !image || !country || !category || !description}
+                        // disabled={!name || !image || !country || !category || !description || !gender || !price || !countInStock}
                         >{id? "Edit" : "Create"}</button>
                     </li>
                     <li>
@@ -274,10 +313,10 @@ function ProductsScreen(props){
                     </thead>
                     <tbody>
                         {products && products.map(product => (
-                            <tr>
+                            <tr key={product._id}>
                                 <td>{product._id}</td>
                                 <td>{product.name}</td>
-                                <td>{product.price}</td>
+                                <td>${product.price}</td>
                                 <td>{product.category}</td>
                                 <td>{product.gender}</td>
                                 <td>{product.country}</td>

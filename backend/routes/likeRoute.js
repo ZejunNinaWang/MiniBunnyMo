@@ -5,13 +5,10 @@ import { isAuth } from '../util';
 const likeRoute = express.Router();
 
 likeRoute.get('/:id', isAuth, async (req, res) => {
-    console.log("in get api")
-    console.log("userId is ", req.params.id)
     try {
         const likes = await Like.find({
             userId: req.params.id
         }).sort({productId:1});
-        console.log("likes are ", likes)
         res.send(likes);
         
     } catch (error) {
@@ -42,14 +39,11 @@ likeRoute.post('/', isAuth, async (req, res) => {
 
 likeRoute.delete('/:userId/:productId', isAuth, async (req, res) => {
     try {
-        console.log("req.params.productId is ", req.params.productId);
-        console.log("req.params.userId is ", req.params.userId);
         const deletedLike = await Like.findOne({
             productId: req.params.productId,
             userId: req.params.userId
         })
         if(deletedLike){
-            console.log("deletedLike is ", deletedLike)
             await deletedLike.remove();
             res.send({msg: "Like Removed."});
         }

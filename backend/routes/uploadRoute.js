@@ -26,7 +26,6 @@ const storage = new GridFsStorage({
     url: mongodbUrl,
     file: (req, file) => {
       return new Promise((resolve, reject) => {
-        console.log("a")
         //crypto.randomBytes is used to generate names
         crypto.randomBytes(16, (err, buf) => {
           if (err) {
@@ -54,22 +53,17 @@ const upload = multer({ storage });
 const storageAvatar = new GridFsStorage({
   url: mongodbUrl,
   file: (req, file) => {
-    // console.log("0")
     return new Promise((resolve, reject) => {
-      // console.log("1")
       //crypto.randomBytes is used to generate names
       crypto.randomBytes(16, (err, buf) => {
-        // console.log("2")
         if (err) {
           return reject(err);
         }
-        // console.log("3")
         const filename = buf.toString('hex') + path.extname(file.originalname);
         const fileInfo = {
           filename: filename,
           bucketName: 'avatars'
         };
-        // console.log("fileinfo is ", fileInfo)
         resolve(fileInfo);
       });
     });
@@ -81,14 +75,10 @@ const uploadRoute = express.Router();
 
 //upload.single('image') allows only 1 file to be uploaded, the file name is 'image' from the frontend
 uploadRoute.post('/', upload.single('image'), (req, res)=>{
-  // console.log("in /")
-  console.log("req files are ", req.file)
   res.json({file: req.file});
 })
 
 uploadRoute.post('/avatars', uploadAvatar.single('image'), (req, res) => {
-  //TODO: update respective user's avatar 
-  console.log("req file is ", req.file)
   res.json({file: req.file})
 })
 

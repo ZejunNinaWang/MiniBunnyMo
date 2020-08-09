@@ -73,7 +73,6 @@ const saveAvatar = (fileName) => async (dispatch, getState) => {
             dispatch({type: USER_SIGNIN_SUCCESS, payload: data});
             Cookie.set('userInfo', JSON.stringify(data));
         }else{
-            console.log("User id is undefined")
             dispatch({type: USER_AVATAR_SAVE_FAIL, payload: "User id is undefined"});
         }
     } catch (error) {

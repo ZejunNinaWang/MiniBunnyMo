@@ -90,6 +90,12 @@ function App() {
                           <li>
                               <Link to="/category/French Lop">French Lop</Link>
                           </li>
+                          <li>
+                              <Link to="/category/Dog">Dog</Link>
+                          </li>
+                          <li>
+                              <Link to="/category/Cat">Cat</Link>
+                          </li>
                       </u1>
                   </div>
               </aside>

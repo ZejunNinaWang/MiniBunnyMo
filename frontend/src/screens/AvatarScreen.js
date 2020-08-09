@@ -47,6 +47,7 @@ function AvatarScreen(props) {
   const userAvatarSave = useSelector(state => state.userAvatarSave);
   const {success: userAvatarSaveSuccess} = userAvatarSave;
 
+  const redirect = props.location.search? props.location.search.split("=")[1]:"/";
   const dispatch = useDispatch();
 
   const loadModels = async () => {
@@ -59,7 +60,6 @@ function AvatarScreen(props) {
       faceapi.nets.faceRecognitionNet.loadFromUri('/models'),
       faceapi.nets.faceExpressionNet.loadFromUri('/models')
     ]).then(() =>{
-      console.log("face api models loaded")
       setModelsLoaded(true)
     }).catch(error => {
       console.error(error)
@@ -69,7 +69,7 @@ function AvatarScreen(props) {
   useEffect(() => { 
       if(userAvatarSaveSuccess){
         dispatch({type: USER_AVATAR_SAVE_RESET});
-        props.history.push("/");
+        props.history.push(redirect);
       }
       return () => {
       };
@@ -82,18 +82,14 @@ function AvatarScreen(props) {
       props.history.push('register');
     }
 
-    console.log("userInfo.avatar is ", userInfo.avatar)
-
     if(isMounted) {
       loadModels();
       photoTakenRef.current = false;
     }
     
     return () => {
-      console.log("setting isMounted to false")
       isMounted = false; // use effect cleanup to set flag false, if unmounted
 
-      console.log("unmount");
       //stop detecting face 
       videoRef.current.removeEventListener('play', detectFace);
       //clear setInterval for face detection
@@ -107,7 +103,6 @@ function AvatarScreen(props) {
 
   const takePhoto = () => {
     photoTakenRef.current = true;
-    console.log("A photoTaken is ", photoTakenRef.current)
 
     //stop detecting face 
     videoRef.current.removeEventListener('play', detectFace);
@@ -122,7 +117,6 @@ function AvatarScreen(props) {
     //create image from current video frame
     const ctx = ctxRef.current;
     ctx.clearRect(0, 0, ctx.width, ctx.height)
-    console.log("drawing video")
     ctx.drawImage(videoRef.current,0,0,w,h);
     
     //draw masks on the screenshot
@@ -148,7 +142,6 @@ function AvatarScreen(props) {
         ctx.translate(x,y)
         ctx.rotate(rad)
         
-        console.log("drawing mask")
         ctx.drawImage(image, -1*width/2 ,-1*width/2 ,width ,width)
 
         ctx.rotate(-rad)
@@ -323,7 +316,6 @@ function AvatarScreen(props) {
   }
 
   const selectFromPC = (e) => {
-    console.log("select from pc");
     const file = e.target.files[0]; //access the single file
 
     const bodyFormData = new FormData();
@@ -341,7 +333,7 @@ function AvatarScreen(props) {
 
   const skip = () => {
     // props.history.push("/");
-    window.location.href = "/";
+    window.location.href = redirect;
   }
 
 

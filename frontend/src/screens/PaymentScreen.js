@@ -15,31 +15,18 @@ function PaymentScreen(props) {
 
     useEffect(() => { 
         if(payment && payment.paymentMethod){
-            // console.log("payment method is ", payment.paymentMethod);
             setPaymentMethod(payment.paymentMethod);
-            // console.log("paymentMethod prop is ", paymentMethod);
-            document.getElementById('paymentMethod-paypal').checked = payment.paymentMethod === "paypal" ;
-            
-        }
-        
-        // console.log("document.getElementById('paymentMethod-paypal').checked is ", document.getElementById('paymentMethod-paypal').checked);
-        // console.log("", paymentMethod === payment.paymentMethod)
-        
+            document.getElementById('paymentMethod-paypal').checked = payment.paymentMethod === "paypal" ; 
+        }       
         return () => {
         };
     }, []);
 
     const checkHandler = (e) => {
-        // console.log("in checkhandler");
-        // console.log("target.checked is ", e.target.checked);
-        // const checked = e.target.checked;
-        // e.target.checked = !checked;
         setPaymentMethod(e.target.value);
     }
   const submitHandler = (e) => {
     e.preventDefault();
-    // console.log("in Submit handler");
-    // console.log("paymentMethod is ", paymentMethod);
     dispatch(savePayment({ paymentMethod: paymentMethod }));
     props.history.push('/placeorder');
   };

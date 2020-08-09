@@ -28,7 +28,6 @@ function ProfileScreen(props){
     //update button handler
     const submitHandler = (e) => {
         e.preventDefault();
-        console.log("name is ", name);
         dispatch(update({userId: userInfo._id, name, email, password}));
         // window.location.reload();
     }

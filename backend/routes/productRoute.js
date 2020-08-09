@@ -34,9 +34,7 @@ productRoute.get('/', async (req, res) => {
 });
 
 productRoute.get('/mine', isAuth, async (req, res) => {
-  console.log("req.user.email is ", req.user.email)
   const products = await Product.find({ sellerEmail: req.user.email});
-  console.log("products ", products);
   res.send(products);
 })
 
@@ -60,7 +58,7 @@ productRoute.post("/", isAuth, isAdmin, async (req, res) => {
       countInStock: req.body.countInStock,
       description: req.body.description,
       gender: req.body.gender,
-      seller: req.user.email
+      sellerEmail: req.user.email
       // rating: req.body.rating,
       // numReviews: req.body.numReviews,
     });

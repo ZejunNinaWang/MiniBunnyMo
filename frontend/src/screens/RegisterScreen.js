@@ -23,38 +23,24 @@ function RegisterScreen(props){
     useEffect(() => {
         // passwordMatchRef.current = true;
         if(userInfo && userInfo.name){
-            window.location.href = "/avatar";
+            if(redirect === "/"){
+                window.location.href = "/avatar";
+            }
+            else{
+                window.location.href = "/avatar?redirect="+redirect;
+            }
+            
         }
         return () => {
 
         };
     }, [userInfo]);
 
-    // useEffect(() => {
-    //     //check password match
-    //     if(password !== rePassword){
-    //         passwordMatchRef.current = false;
-    //         console.log("password: ", password)
-    //         console.log("rePassword: ", rePassword)
-    //         console.log("password not match ", passwordMatchRef.current)
-            
-    //     }
-
-    //     return () => {
-
-    //     };
-    // }, [password, rePassword]);
-
     const submitHandler = (e) => {
         e.preventDefault();
-        console.log("in submit");
         //check password match
         if(password !== rePassword){
             passwordMatchRef.current = false;
-            console.log("password: ", password)
-            console.log("rePassword: ", rePassword)
-            console.log("password not match ", passwordMatchRef.current)
-            
         }
         else{
             dispatch(register(name,email, password));

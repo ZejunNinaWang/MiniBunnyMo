@@ -44,10 +44,8 @@ function HomeScreen(props){
     }
 
     const like = (productId) => {
-        console.log("like product: ", productId);
         if(likesByProductId[productId] === true){
             //if already like, then remove like
-            console.log("remove like");
             dispatch(removeLikeProduct(productId));
         } else {
             //like
