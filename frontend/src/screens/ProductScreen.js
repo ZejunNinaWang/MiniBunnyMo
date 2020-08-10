@@ -85,7 +85,8 @@ function ProductScreen(props){
             <div className="back-to-result">
                 <Link to="/">Back to results</Link>
             </div>
-            {loading ? <div className="loading"><i className="fa fa-spinner fa-spin"></i></div> :
+            {/* {loading ? <div className="loading"><i className="fa fa-spinner fa-spin"></i></div> : */}
+            {loading ? <div className="loading"><img className="no-result-found" src="/masks/loading.GIF"/></div> :
             error ? <div>{error}</div> : 
                 (
                     <>

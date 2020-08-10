@@ -147,6 +147,13 @@ transform: scale(1.07);
   max-width: 34rem;
 }
 
+.no-result-found{
+  width: 30rem;
+  height: 30rem;
+  margin: 0 auto;
+  display: block;
+}
+
 /*Reviews*/
 ul.review{
   list-style-type: none;

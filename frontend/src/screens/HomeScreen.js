@@ -57,7 +57,7 @@ function HomeScreen(props){
 
     return(
         <div>
-            {category && <h2 className="category-title">{category}</h2>}
+            {/* {category && <h2 className="category-title">{category}</h2>} */}
 
             <div className="filter">
                 
@@ -106,8 +106,10 @@ function HomeScreen(props){
                 </div>
             </div>
             {
-                loading ? <div className="loading"><i className="fa fa-spinner fa-spin"></i></div> :
+                // loading ? <div className="loading"><i className="fa fa-spinner fa-spin"></i></div> :
+                loading ? <div className="loading"><img className="no-result-found" src="/masks/loading.GIF"/></div> :
                 error ? <div>{error}</div> :
+                products.length === 0 ? <div><img className="no-result-found" src="/masks/no_results_found.PNG"/></div> :
                 <div>
                 {/* <p>HomeScreen</p> */}
                 <ul className="products">

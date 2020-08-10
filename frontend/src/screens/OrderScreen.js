@@ -27,7 +27,12 @@ function OrderScreen(props) {
     //dispatch(payOrder(order, paymentResult));
   }
 
-  return loading ? <div>Loading ...</div> : error ? <div>{error}</div> :
+  const continueShopping = () => {
+    props.history.push('/');
+  }
+
+  return loading ? <div className="loading"><img className="no-result-found" src="/masks/loading.GIF"/></div> : 
+    error ? <div>{error}</div> :
 
     <div>
       <div className="placeorder">
@@ -125,6 +130,9 @@ function OrderScreen(props) {
             <li>
               <div>Order Total</div>
               <div>${order.totalPrice}</div>
+            </li>
+            <li>
+              <button className="button primary full-width" onClick={continueShopping}>Continue Shopping</button>
             </li>
           </ul>
 

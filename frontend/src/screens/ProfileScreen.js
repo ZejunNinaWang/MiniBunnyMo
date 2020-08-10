@@ -55,7 +55,8 @@ function ProfileScreen(props){
                         <img src={"/api/avatars/"+userInfo.avatar} alt="Avatar" className="avatar-icon"></img>
                     </Link>}</li>
                     {/* {loading && <div>Loading</div>} */}
-                    {loading && <div className="loading"><i className="fa fa-spinner fa-spin"></i></div>}
+                    {/* {loading && <div className="loading"><i className="fa fa-spinner fa-spin"></i></div>} */}
+                    {loading && <div className="loading"><img className="no-result-found" src="/masks/loading.GIF"/></div>}
                     {error && <div style={{color: "green"}}>{error}</div>}
                     {/*TODO: fix issue: the following text should disappear after switch screen,for now it only disappear when refresh page */}
                     {userUpdateSuccess && <div style={{color: "green"}}>Profile Saved Successfully.</div>}
@@ -86,7 +87,8 @@ function ProfileScreen(props){
         <div className="profile-orders content-margined">
             <div><h3>Your Orders:</h3></div>
         {   
-            loadingOrders ? <div className="loading"><i className="fa fa-spinner fa-spin"></i></div> :
+            // loadingOrders ? <div className="loading"><i className="fa fa-spinner fa-spin"></i></div> :
+            loadingOrders ? <div className="loading"><img className="no-result-found" src="/masks/loading.GIF"/></div> :
             errorOrders ? <div>{errorOrders} </div> :
             orders.length !== 0 ?
             <div className="order-list">

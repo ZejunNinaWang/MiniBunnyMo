@@ -26,7 +26,8 @@ function OrdersScreen(props) {
   const orderDetail = (orderId) => {
     props.history.push('/order/' + orderId);
   }
-  return loading ? <div className="loading"><i className="fa fa-spinner fa-spin"></i></div> :
+  // return loading ? <div className="loading"><i className="fa fa-spinner fa-spin"></i></div> :
+  return loading ? <div className="loading"><img className="no-result-found" src="/masks/loading.GIF"/></div> :
     <div className="content content-margined">
 
       <div className="order-header">
@@ -35,7 +36,7 @@ function OrdersScreen(props) {
       <div className="order-list">
         {
           orders.length !== 0 ? 
-<table className="table">
+        <table className="table">
           <thead>
             <tr>
               <th>ID</th>
