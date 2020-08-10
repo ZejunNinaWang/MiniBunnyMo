@@ -299,6 +299,8 @@ function ProductsScreen(props){
         <div className="product-list">
             {
                 loading ? <div className="loading"><img className="no-result-found" src="/masks/loading.GIF"/></div> :
+                loadingSave ? <div className="loading"><img className="no-result-found" src="/masks/loading.GIF"/></div> :
+                loadingDelete ? <div className="loading"><img className="no-result-found" src="/masks/loading.GIF"/></div> :
                 products && products.length !== 0 ?
                 <table>
                     <thead>
