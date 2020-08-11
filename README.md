@@ -17,7 +17,7 @@ This is a personal project where I try to build an eCommerce website for selling
 
 4. Comment, like 
 
-<img src="https://minibunnymo.herokuapp.com/masks/4Comm_like.gif" width="800" height="auto" />
+<img src="https://minibunnymo.herokuapp.com/masks/4Commet_like_compressed.gif" width="800" height="auto" />
 
 5. Edit Profile, logout, Signin
 
