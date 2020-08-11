@@ -211,7 +211,7 @@ function AvatarScreen(props) {
       //track face in video
       const intervalId = setInterval(async () => {
         if(videoRef && videoRef.current && photoTakenRef.current !== true){
-          const detection = await faceapi.detectSingleFace(videoRef.current, new faceapi.TinyFaceDetectorOptions()).withFaceLandmarks().withFaceExpressions()
+          const detection = await faceapi.detectSingleFace(videoRef.current, new faceapi.TinyFaceDetectorOptions()).withFaceLandmarks()
           if(!detection) return
           canvas.getContext('2d').clearRect(0, 0, canvas.width, canvas.height)
     
