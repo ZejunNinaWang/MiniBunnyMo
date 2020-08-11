@@ -93,13 +93,10 @@ userRoute.post("/signin", async (req, res) => {
   });
 
 userRoute.put('/:id/avatars', isAuth, async (req, res) => {
-  console.log("in put avatars")
   const user = await User.findById(req.params.id);
-  console.log("user is ", user)
   if(user){
     user.avatar = req.body.fileName || user.avatar;
     const updatedUser = await user.save();
-    console.log("avatar updated")
     res.status(200).send({
       _id: updatedUser.id,
       name: updatedUser.name,
