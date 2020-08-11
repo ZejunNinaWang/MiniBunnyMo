@@ -23,5 +23,9 @@ This is a personal project where I try to build an eCommerce website for selling
 
 <img src="https://minibunnymo.herokuapp.com/masks/5Edit_Logout_Signin.gif" width="800" height="auto" />
 
-## Status
+## Technologies
+* Frontend: React, Redux, HTML, CSS, JavaScript
+* Backend: Node, Express
+* Database: MongoDB
+* Machine Learning: Tensorflow.js, Face-api.js, MobileNet
 
