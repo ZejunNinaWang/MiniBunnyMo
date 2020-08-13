@@ -19,7 +19,7 @@ This is a personal project where I try to build an eCommerce website for selling
 
 <img src="https://minibunnymo.herokuapp.com/masks/2_3_PlaceOrder.gif" width="800" height="auto" />
 
-5. Add/edit/delete your pet
+5. Add pet with animal detection check, edit/delete pet
 
 <img src="https://minibunnymo.herokuapp.com/masks/3Add_Edit_Pet.gif" width="800" height="auto" />
 
