@@ -4,7 +4,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { signin } from '../actions/userActions';
 import { saveProduct, listProducts, deleteProduct, listMyProducts } from '../actions/productActions';
 import axios from 'axios';
-import * as mobilenet from "@tensorflow-models/mobilenet";
+// import * as mobilenet from "@tensorflow-models/mobilenet";
 import { set } from 'js-cookie';
 
 
@@ -60,8 +60,8 @@ function ProductsScreen(props){
     //load mobilenet model when page loads
     useEffect(() => {
         const loadMobileNetModel = async () => {
-            const model = await mobilenet.load();
-            setMobileNetModel(model);
+            // const model = await mobilenet.load();
+            // setMobileNetModel(model);
         }
         loadMobileNetModel();
         
@@ -122,7 +122,7 @@ function ProductsScreen(props){
     }
 
     const uploadFile = async (file) => {
-        if(imageRef.current){
+        if(imageRef.current && mobileNetModel != null){
             setVerifying(true);
             const results = await mobileNetModel.classify(imageRef.current);
             let imageValidated = false;
@@ -157,6 +157,24 @@ function ProductsScreen(props){
                 setFileUploadError("Animal not detected. Please try again.");
             }
         }
+
+
+        //TODO: to be removed when mobilenet works
+        const bodyFormData = new FormData();
+        bodyFormData.append('image', file); //so we can send ajax request 
+        setUploading(true);
+        axios.post('/api/uploads', bodyFormData, {
+            headers: {
+                'Content-Type': 'multipart/form-data',
+            },
+        }).then(response => {
+            // console.log("upload success ", response.data.file.filename);
+            setImage(response.data.file.filename);
+            setUploading(false);
+        }).catch(err => {
+            setFileUploadError('Failed to upload image to server.' + err);
+            setUploading(false);
+        });
     }
 
     const validateFileHandler = async (e) => {

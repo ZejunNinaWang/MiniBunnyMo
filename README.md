@@ -7,19 +7,27 @@ This is a personal project where I try to build an eCommerce website for selling
 <!-- ![Search](https://minibunnymo.herokuapp.com/masks/1search.gif =250x250) -->
 <img src="https://minibunnymo.herokuapp.com/masks/1search.gif" width="800" height="auto" />
 
-2. Register, adding profile photo, place order
+2. Register
 
-<img src="https://minibunnymo.herokuapp.com/masks/2Register_AddProfilePic_PlaceOrder.gif" width="800" height="auto" />
+<img src="https://minibunnymo.herokuapp.com/masks/2_1_Register.gif" width="800" height="auto" />
 
-3. Add/edit/delete your pet
+3. Adding profile photo
+
+<img src="https://minibunnymo.herokuapp.com/masks/2_2_Avatar_compressed.gif" width="800" height="auto" />
+
+4. Place order
+
+<img src="https://minibunnymo.herokuapp.com/masks/2_3_PlaceOrder.gif" width="800" height="auto" />
+
+5. Add/edit/delete your pet
 
 <img src="https://minibunnymo.herokuapp.com/masks/3Add_Edit_Pet.gif" width="800" height="auto" />
 
-4. Comment, like 
+6. Comment, like 
 
 <img src="https://minibunnymo.herokuapp.com/masks/4Commet_like_compressed.gif" width="800" height="auto" />
 
-5. Edit Profile, logout, Signin
+7. Edit Profile, logout, Signin
 
 <img src="https://minibunnymo.herokuapp.com/masks/5Edit_Logout_Signin.gif" width="800" height="auto" />
 
