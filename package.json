@@ -20,7 +20,7 @@
     "canvas": "^2.6.1",
     "dotenv": "^8.2.0",
     "exit-hook": "^2.2.0",
-    "express": "^4.17.1",
+    "express": "^4.17.3",
     "face-api.js": "^0.22.2",
     "gridfs-stream": "^1.1.1",
     "jsonwebtoken": "^8.5.1",
